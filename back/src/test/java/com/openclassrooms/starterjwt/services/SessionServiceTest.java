@@ -84,8 +84,6 @@ class SessionServiceTest {
             .date(date)
             .build();
 
-    //@Mock
-    //private SessionService s
     @Test
     void checkIfFindAll() {
         //when
@@ -185,7 +183,6 @@ class SessionServiceTest {
         List<User> voidList = new ArrayList<User>();
 
         User mockUser = mock(User.class);
-       // when(mockUser.getId()).thenReturn(userId);
 
         List<User> users = Arrays.asList(mockUser);
         Session mockSession = mock(Session.class);
@@ -226,5 +223,26 @@ class SessionServiceTest {
         when(mockSession.getUsers()).thenReturn(users);
         when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(mockSession));
         assertThrows(BadRequestException.class, ()->{underTest.noLongerParticipate(sessionId, userId);});
+    }
+
+    @Test
+    void checkIfNoLongerParticipateAddUser() {
+        Long sessionId = 1L;
+        Long userId = 2L;
+        List<User> voidList = new ArrayList<User>();
+        User mockUser = mock(User.class);
+        when(mockUser.getId()).thenReturn(userId);
+
+        List<User> users = Arrays.asList(mockUser);
+        Session mockSession = mock(Session.class);
+        when(mockSession.getUsers()).thenReturn(users);
+        when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(mockSession));
+
+        underTest.noLongerParticipate(sessionId, userId);
+
+        when(mockSession.getUsers()).thenReturn(voidList);
+        verify(sessionRepository).save(mockSession);
+        assertFalse(mockSession.getUsers().contains(voidList));
+
     }
 }

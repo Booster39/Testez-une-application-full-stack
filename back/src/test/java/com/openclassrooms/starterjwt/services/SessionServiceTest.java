@@ -178,7 +178,28 @@ class SessionServiceTest {
 
    }
 
+    @Test
+    void checkIfParticipateAddUser() {
+        Long sessionId = 1L;
+        Long userId = 2L;
+        List<User> voidList = new ArrayList<User>();
 
+        User mockUser = mock(User.class);
+       // when(mockUser.getId()).thenReturn(userId);
+
+        List<User> users = Arrays.asList(mockUser);
+        Session mockSession = mock(Session.class);
+        when(mockSession.getUsers()).thenReturn(users);
+
+        when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(mockSession));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
+        when(mockSession.getUsers()).thenReturn(voidList);
+        underTest.participate(sessionId, userId);
+
+       when(mockSession.getUsers()).thenReturn(users);
+        verify(sessionRepository).save(mockSession);
+        assertTrue(mockSession.getUsers().contains(mockUser));
+    }
 
     @Test
     void checkIfNoLongerParticipateThrowsNotFoundException() {

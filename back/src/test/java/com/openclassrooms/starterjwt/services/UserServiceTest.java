@@ -11,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
-
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     @Mock
@@ -61,5 +60,4 @@ class UserServiceTest {
         Long capturedIdUser = userIdArgumentCaptor.getValue();
         assertEquals(capturedIdUser, user.getId());
     }
-
 }

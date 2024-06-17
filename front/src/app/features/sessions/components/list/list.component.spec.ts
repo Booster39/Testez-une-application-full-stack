@@ -6,10 +6,12 @@ import { expect } from '@jest/globals';
 import { SessionService } from 'src/app/services/session.service';
 
 import { ListComponent } from './list.component';
+import { UserService } from 'src/app/services/user.service';
 
 describe('ListComponent', () => {
   let component: ListComponent;
   let fixture: ComponentFixture<ListComponent>;
+  let sessionService: SessionService;
 
   const mockSessionService = {
     sessionInformation: {
@@ -27,10 +29,17 @@ describe('ListComponent', () => {
 
     fixture = TestBed.createComponent(ListComponent);
     component = fixture.componentInstance;
+    sessionService = TestBed.inject(SessionService);
     fixture.detectChanges();
-  });
+  
+
+});
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should get user session', () => {
+    
+  })
 });

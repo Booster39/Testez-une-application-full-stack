@@ -1,25 +1,22 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule, } from '@angular/router/testing';
 import { expect } from '@jest/globals'; 
-import { SessionService } from '../../../../services/session.service';
 
 import { DetailComponent } from './detail.component';
+import { SessionApiService } from '../../services/session-api.service';
+import { Router } from '@angular/router';
 
 
 describe('DetailComponent', () => {
   let component: DetailComponent;
   let fixture: ComponentFixture<DetailComponent>; 
-  let service: SessionService;
+  let sessionApiService: SessionApiService;
+  let matSnackBarMock: MatSnackBar;
+  let routerMock: Router;
 
-  const mockSessionService = {
-    sessionInformation: {
-      admin: true,
-      id: 1
-    }
-  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -30,10 +27,12 @@ describe('DetailComponent', () => {
         ReactiveFormsModule
       ],
       declarations: [DetailComponent], 
-      providers: [{ provide: SessionService, useValue: mockSessionService }],
+      providers: [{ provide: SessionApiService, useValue: sessionApiService },
+        { provide: MatSnackBar, useValue: matSnackBarMock },
+        { provide: Router, useValue: routerMock }
+      ],
     })
       .compileComponents();
-      service = TestBed.inject(SessionService);
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -42,5 +41,26 @@ describe('DetailComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  
+  it('should back', () => {
+    expect(component.back()).toEqual(window.history.back());
+  })
+
+  it('it should delete', () => {
+    component.delete();
+
+    expect(sessionApiService.delete).toHaveBeenCalledWith('1');
+    expect(matSnackBarMock.open).lastCalledWith('Session deleted !', 'Close', { duration: 3000 });
+    expect(routerMock.navigate).toHaveBeenCalledWith(['sessions']);
+  })
+
+  it('should participate', () => {
+    component.sessionId = '1'
+    component.userId = '2'
+    component.participate()
+
+    expect(sessionApiService.participate).toHaveBeenCalledWith(component.sessionId, component.userId);
+  })
 });
 

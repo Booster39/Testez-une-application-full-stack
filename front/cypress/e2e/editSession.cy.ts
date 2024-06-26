@@ -1,5 +1,5 @@
-describe('Detail session spec', () => {
-    it('Detail session successfull', () => {
+describe('Edit session spec', () => {
+    it('Edit session successfull', () => {
         cy.visit('/login')
 
         cy.intercept('POST', '/api/auth/login', {
@@ -113,8 +113,32 @@ describe('Detail session spec', () => {
 
               }).as('GetTheTeacher')
         
-            cy.contains('Detail').click()
-            cy.url().should('eq', 'http://localhost:4200/sessions/detail/1')
+            cy.contains('Edit').click()
+            cy.url().should('eq', 'http://localhost:4200/sessions/update/1')
+
+            cy.intercept(
+                {
+                    method: 'PUT',
+                    url: '/api/session/1'
+                },{
+                        "id": 1,
+                        "name": "yoga",
+                        "date": "2024-06-27T00:00:00.000+00:00",
+                        "teacher_id": 1,
+                        "description": "It is not the same session than before.",
+                        "users": [],
+                        "createdAt": null,
+                        "updatedAt": "2024-06-26T13:00:14.8109254"
+                }).as('PutSession')
+
+                cy.intercept(
+                    {
+                        method: 'GET',
+                        url: '/api/session'
+                    }).as('Sessions')
+                    cy.contains('Save').click()
+                cy.url().should('eq', 'http://localhost:4200/sessions')
+            
     })
 
 })

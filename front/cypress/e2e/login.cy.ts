@@ -45,4 +45,20 @@ describe('Login spec', () => {
     cy.get('.error').should('contain', 'An error occurred')
     cy.url().should('include', '/login')
   })
+
+
+  it('Displays error when required fields are missing', () => {
+    cy.visit('/login')
+
+    // Attempt to submit the form without filling in any fields
+    cy.get('button[type=submit]').should('be.disabled')
+
+    // Check that the email and password input fields have the 'ng-invalid' class
+    cy.get('input[formControlName=email]').should('have.class', 'ng-invalid')
+    cy.get('input[formControlName=password]').should('have.class', 'ng-invalid')
+
+
+    cy.url().should('include', '/login')
+  })
+
 });

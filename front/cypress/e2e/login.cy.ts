@@ -24,4 +24,25 @@ describe('Login spec', () => {
 
     cy.url().should('include', '/sessions')
   })
+
+  it('Handles incorrect login credentials', () => {
+    cy.visit('/login')
+
+    // Mock the failed login response
+    cy.intercept('POST', '/api/auth/login', {
+      statusCode: 401,
+      body: {
+        path: "/api/auth/login",
+        error: "Unauthorized",
+        message: "Bad credentials",
+        status: 401
+    },
+    })
+
+    cy.get('input[formControlName=email]').type("wrong@user.com")
+    cy.get('input[formControlName=password]').type(`${"wrongpassword"}{enter}{enter}`)
+
+    cy.get('.error').should('contain', 'An error occurred')
+    cy.url().should('include', '/login')
+  })
 });

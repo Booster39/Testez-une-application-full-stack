@@ -55,4 +55,6 @@ describe('Register spec', () => {
   
       cy.url().should('include', '/register')
     })
+
+    
   });

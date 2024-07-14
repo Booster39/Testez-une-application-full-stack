@@ -11,7 +11,7 @@ describe('Delete session spec', () => {
             admin: true
           },
         })
-    
+
         cy.intercept(
           {
             method: 'GET',

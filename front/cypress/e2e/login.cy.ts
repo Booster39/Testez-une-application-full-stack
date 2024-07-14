@@ -57,7 +57,6 @@ describe('Login spec', () => {
     cy.get('input[formControlName=email]').should('have.class', 'ng-invalid')
     cy.get('input[formControlName=password]').should('have.class', 'ng-invalid')
 
-
     cy.url().should('include', '/login')
   })
 

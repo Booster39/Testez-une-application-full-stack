@@ -132,6 +132,25 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+    @Test
+    @WithMockUser(username = "testuser@example.com")
+    public void testDeleteUserSuccess() throws Exception {
+        existingUser.setId(555L);
+        mockMvc.perform(delete("/api/user/{id}", existingUser.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
+        // Verify user is actually deleted
+        assertFalse(userRepository.findById(existingUser.getId()).isPresent());
+    }
+
+    @Test
+    @WithMockUser(username = "anotheruser@example.com")
+    public void testDeleteUserUnauthorized() throws Exception {
+        existingUser.setId(555L);
+        mockMvc.perform(delete("/api/user/{id}", existingUser.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
 
 }

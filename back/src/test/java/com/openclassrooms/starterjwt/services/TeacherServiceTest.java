@@ -33,6 +33,7 @@ private TeacherService underTest;
         verify(teacherRepository).findAll();
     }
 
+
     @Test
     void checkIfFindById() {
         //given

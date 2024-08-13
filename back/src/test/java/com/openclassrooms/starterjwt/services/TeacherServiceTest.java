@@ -14,6 +14,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherServiceTest {
@@ -32,7 +33,29 @@ private TeacherService underTest;
         //then
         verify(teacherRepository).findAll();
     }
+    @Test
+    public void testFindById() {
+        // Given
+        LocalDateTime now = LocalDateTime.now();
+        Teacher teacher = new Teacher();
+        teacher.setId(1L);
+        teacher.setFirstName("John");
+        teacher.setLastName("Doe");
+        teacher.setCreatedAt(now);
+        teacher.setUpdatedAt(now);
 
+        when(teacherRepository.findById(1L)).thenReturn(java.util.Optional.of(teacher));
+
+        // When
+        Teacher teacherFromService = underTest.findById(1L);
+
+        // Then
+        assertEquals(1L, teacherFromService.getId());
+        assertEquals("John", teacherFromService.getFirstName());
+        assertEquals("Doe", teacherFromService.getLastName());
+        assertEquals(now, teacherFromService.getCreatedAt());
+        assertEquals(now, teacherFromService.getUpdatedAt());
+    }
 
     @Test
     void checkIfFindById() {
@@ -53,3 +76,24 @@ private TeacherService underTest;
         assertEquals(capturedIdTeacher, teacher.getId());
     }
 }
+
+
+/*
+*  @BeforeEach
+    public void setUp() {
+        // Clean up before each test
+        userRepository.deleteAll();
+    }
+ @Test
+    public void testFindByIdValid() throws Exception {
+        // Given
+        Teacher teacher = new Teacher(null, "John", "Doe", null, null);
+        teacherRepository.save(teacher);
+
+        // When
+        mockMvc.perform(get("/api/teacher/" + teacher.getId())
+                        .header("Authorization", "Bearer " + getAdminAccessToken()))
+                // Then
+                .andExpect(status().isOk());
+    }
+* */

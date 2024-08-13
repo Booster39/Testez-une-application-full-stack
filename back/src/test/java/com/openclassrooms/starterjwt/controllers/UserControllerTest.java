@@ -78,28 +78,19 @@ public class UserControllerTest {
     @Autowired
     private SessionMapper sessionMapper;
 
-    User existingUser = User.builder()
-            .email("testuser@example.com")
-            .firstName("User")
-            .lastName("Test")
-            .password("password123")
-            .admin(true)
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .build();
-    User anotherUser = User.builder()
-            .email("anotheruser@example.com")
-            .firstName("Another")
-            .lastName("User")
-            .password("password456")
-            .admin(false)
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .build();
+
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdSuccess() throws Exception {
-
+        User existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         userRepository.save(existingUser);
 
         mockMvc.perform(get("/api/user/{id}", existingUser.getId()))
@@ -112,6 +103,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdNotFound() throws Exception {
+        User existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         mockMvc.perform(get("/api/user/{id}", 999))
                 .andExpect(status().isNotFound());
     }
@@ -119,6 +119,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdBadRequest() throws Exception {
+        User existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         mockMvc.perform(get("/api/user/{id}", "invalidId"))
                 .andExpect(status().isBadRequest());
     }
@@ -128,6 +137,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser@example.com")
     public void testDeleteUserNotFound() throws Exception {
+        User existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         mockMvc.perform(delete("/api/user/{id}", 999)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -135,6 +153,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser@example.com")
     public void testDeleteUserSuccess() throws Exception {
+        User existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         existingUser.setId(555L);
         mockMvc.perform(delete("/api/user/{id}", existingUser.getId())
                         .contentType(MediaType.APPLICATION_JSON))
@@ -147,6 +174,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "anotheruser@example.com")
     public void testDeleteUserUnauthorized() throws Exception {
+        User existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         existingUser.setId(555L);
         mockMvc.perform(delete("/api/user/{id}", existingUser.getId())
                         .contentType(MediaType.APPLICATION_JSON))

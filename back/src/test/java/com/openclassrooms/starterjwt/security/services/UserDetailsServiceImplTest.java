@@ -26,21 +26,14 @@ class UserDetailsServiceImplTest {
 
     private UserDetailsServiceImpl underTest;
 
+    private String username;
+    private User user;
+
     @BeforeEach
-    void setUp() {
-        underTest = new UserDetailsServiceImpl(userRepository);
-    }
-
-    @Test
-    void checkIfLoadUserByUsernameThrowsUsernameNotFoundException() {
-        String username = "okba@gmail.com";
-        assertThrows(UsernameNotFoundException.class, () -> underTest.loadUserByUsername(username), "User Not Found with email: " + username);
-    }
-
-    @Test
-    void checkIfLoadUserByUsername() {
-        String username = "okba@gmail.com";
-        User user = User.builder()
+    void setUp()
+    {
+         username = "okba@gmail.com";
+         user = User.builder()
                 .id(1L)
                 .admin(true)
                 .email(username)
@@ -48,14 +41,24 @@ class UserDetailsServiceImplTest {
                 .lastName("Nafi")
                 .password("pwd")
                 .build();
-        userRepository.save(user);
+        underTest = new UserDetailsServiceImpl(userRepository);
+    }
+
+    @Test
+    void checkIfLoadUserByUsernameThrowsUsernameNotFoundException() {
+        given(userRepository.findByEmail(username)).willReturn(Optional.empty());
+
+        assertThrows(UsernameNotFoundException.class, () -> underTest.loadUserByUsername(username),
+                "User Not Found with email: " + username);    }
+
+    @Test
+    void checkIfLoadUserByUsername() {
         given(userRepository.findByEmail(username)).willReturn(Optional.of(user));
+
+        // Act
         underTest.loadUserByUsername(username);
 
-        ArgumentCaptor<String> userMailArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(userRepository).findByEmail(userMailArgumentCaptor.capture());
-
-        String userMailCaptured = userMailArgumentCaptor.getValue();
-        assertEquals(userMailCaptured, username);
+        // Assert
+        verify(userRepository).findByEmail(username);
     }
 }

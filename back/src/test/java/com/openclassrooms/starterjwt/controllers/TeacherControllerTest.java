@@ -96,3 +96,22 @@ public class TeacherControllerTest {
                 .andExpect(jsonPath("$[0].firstName", is("User")));
     }
 }
+/*
+*  @BeforeEach
+    public void setUp() {
+        // Clean up before each test
+        userRepository.deleteAll();
+    }
+ @Test
+    public void testFindByIdValid() throws Exception {
+        // Given
+        Teacher teacher = new Teacher(null, "John", "Doe", null, null);
+        teacherRepository.save(teacher);
+
+        // When
+        mockMvc.perform(get("/api/teacher/" + teacher.getId())
+                        .header("Authorization", "Bearer " + getAdminAccessToken()))
+                // Then
+                .andExpect(status().isOk());
+    }
+* */

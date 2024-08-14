@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -35,6 +36,8 @@ class SessionServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @InjectMocks
     private SessionService underTest;
 
     @Mock
@@ -98,11 +101,7 @@ class SessionServiceTest {
         //when
         underTest.create(session);
         //then
-        ArgumentCaptor<Session> sessionArgumentCaptor = ArgumentCaptor.forClass(Session.class);
-        verify(sessionRepository).save(sessionArgumentCaptor.capture());
-
-        Session capturedSession = sessionArgumentCaptor.getValue();
-        assertEquals(capturedSession, session);
+        verify(sessionRepository).save(eq(session));
     }
 
 
@@ -114,11 +113,7 @@ class SessionServiceTest {
         //when
         underTest.delete(session.getId());
         //then
-        ArgumentCaptor<Long> sessionIdArgumentCaptor = ArgumentCaptor.forClass(Long.class);
-        verify(sessionRepository).deleteById(sessionIdArgumentCaptor.capture());
-
-        Long capturedIdSession = sessionIdArgumentCaptor.getValue();
-        assertEquals(capturedIdSession, session.getId());
+        verify(sessionRepository).deleteById(eq(session.getId()));
     }
 
     @Test
@@ -128,11 +123,7 @@ class SessionServiceTest {
         //when
         underTest.getById(session.getId());
         //then
-        ArgumentCaptor<Long> sessionIdArgumentCaptor = ArgumentCaptor.forClass(Long.class);
-        verify(sessionRepository).findById(sessionIdArgumentCaptor.capture());
-
-        Long capturedIdSession = sessionIdArgumentCaptor.getValue();
-        assertEquals(capturedIdSession, session.getId());
+        verify(sessionRepository).findById(eq(session.getId()));
     }
 
     @Test
@@ -142,11 +133,7 @@ class SessionServiceTest {
         //when
         underTest.update(1L, session);
         //then
-        ArgumentCaptor<Session> sessionArgumentCaptor = ArgumentCaptor.forClass(Session.class);
-        verify(sessionRepository).save(sessionArgumentCaptor.capture());
-
-        Session capturedSession = sessionArgumentCaptor.getValue();
-        assertEquals(capturedSession, session);
+        verify(sessionRepository).save(eq(session));
     }
 
     @Test

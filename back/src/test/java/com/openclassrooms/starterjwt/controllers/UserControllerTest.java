@@ -131,8 +131,10 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser@example.com")
     public void testDeleteUserSuccess() throws Exception {
+        // Save the user to the repository
+        existingUser = userRepository.save(existingUser);
 
-        existingUser.setId(555L);
+        // Perform the delete request
         mockMvc.perform(delete("/api/user/{id}", existingUser.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -144,10 +146,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "anotheruser@example.com")
     public void testDeleteUserUnauthorized() throws Exception {
-        existingUser.setId(555L);
+        // Save the user to the repository
+        existingUser = userRepository.save(existingUser);
+
+        // Perform the delete request
         mockMvc.perform(delete("/api/user/{id}", existingUser.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
-    }
 
+        // Verify the user still exists
+        assertTrue(userRepository.findById(existingUser.getId()).isPresent());
+    }
 }

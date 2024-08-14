@@ -57,40 +57,47 @@ public class SessionControllerTest {
     @Autowired
     private SessionMapper sessionMapper;
 
+    private User existingUser;
+
+    private List<User> list;
+
+    private Teacher existingTeacher;
+
+    private Session existingSession;
+
     @BeforeEach
     public void setUp() {
         // Clean up before each test
+         existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(false)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        list = Collections.singletonList(existingUser);
 
+
+        // Creating Teacher with builder
+        existingTeacher = Teacher.builder()
+                .firstName("User")
+                .lastName("Test")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // Creating Session with builder
+        existingSession = Session.builder()
+                .name("Yoga")
+                .date(new Date())
+                .description("Nouvelle session")
+                .teacher(existingTeacher)
+                .users(list)
+                .build();
     }
-    Long id = 1L;
-    User existingUser = User.builder()
-            .email("testuser@example.com")
-            .firstName("User")
-            .lastName("Test")
-            .password("password123")
-            .admin(false)
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .build();
-    List<User> list = Collections.singletonList(existingUser);
 
-
-    // Creating Teacher with builder
-    Teacher existingTeacher = Teacher.builder()
-            .firstName("User")
-            .lastName("Test")
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .build();
-
-    // Creating Session with builder
-    Session existingSession = Session.builder()
-            .name("Yoga")
-            .date(new Date())
-            .description("Nouvelle session")
-            .teacher(existingTeacher)
-            .users(list)
-            .build();
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdSuccess() throws Exception {

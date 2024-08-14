@@ -7,6 +7,8 @@ import com.openclassrooms.starterjwt.payload.request.LoginRequest;
 import com.openclassrooms.starterjwt.payload.request.SignupRequest;
 import com.openclassrooms.starterjwt.payload.response.JwtResponse;
 import com.openclassrooms.starterjwt.payload.response.MessageResponse;
+import com.openclassrooms.starterjwt.repository.SessionRepository;
+import com.openclassrooms.starterjwt.repository.TeacherRepository;
 import com.openclassrooms.starterjwt.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,21 +38,41 @@ public class AuthControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private TeacherRepository teacherRepository;
+
+    @Autowired
+    private SessionRepository sessionRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private SignupRequest signupRequest;
+
+    private User existingUser;
+
+    private LoginRequest loginRequest;
 
     @BeforeEach
     public void setUp() {
         // Clean up before each test
+        sessionRepository.deleteAll();
+        teacherRepository.deleteAll();
         userRepository.deleteAll();
-    }
 
-    @Test
-    public void testRegisterUserSuccess() throws Exception {
-        SignupRequest signupRequest = new SignupRequest();
+        signupRequest = new SignupRequest();
         signupRequest.setEmail("testuser@example.com");
         signupRequest.setFirstName("Test");
         signupRequest.setLastName("User");
         signupRequest.setPassword("password123");
+
+        existingUser = new User("testuser@example.com", "User", "Test", passwordEncoder.encode("password123"), false);
+        loginRequest = new LoginRequest();
+        loginRequest.setEmail("testuser@example.com");
+        loginRequest.setPassword("password123");
+    }
+
+    @Test
+    public void testRegisterUserSuccess() throws Exception {
 
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -62,14 +84,7 @@ public class AuthControllerTest {
     @Test
     public void testRegisterUserWithExistingEmail() throws Exception {
         // Create a user in the database
-        User existingUser = new User("testuser@example.com", "User", "Test", passwordEncoder.encode("password123"), false);
         userRepository.save(existingUser);
-
-        SignupRequest signupRequest = new SignupRequest();
-        signupRequest.setEmail("testuser@example.com");
-        signupRequest.setFirstName("Test");
-        signupRequest.setLastName("User");
-        signupRequest.setPassword("password123");
 
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -81,12 +96,7 @@ public class AuthControllerTest {
     @Test
     public void testAuthenticateUserSuccess() throws Exception {
         // Create a user in the database
-        User existingUser = new User("testuser@example.com", "User", "Test", passwordEncoder.encode("password123"), false);
         userRepository.save(existingUser);
-
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("testuser@example.com");
-        loginRequest.setPassword("password123");
 
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -102,11 +112,7 @@ public class AuthControllerTest {
     @Test
     public void testAuthenticateUserWithInvalidCredentials() throws Exception {
         // Create a user in the database
-        User existingUser = new User("testuser@example.com", "User", "Test", passwordEncoder.encode("password123"), false);
         userRepository.save(existingUser);
-
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("testuser@example.com");
         loginRequest.setPassword("wrongpassword");
 
         mockMvc.perform(post("/api/auth/login")

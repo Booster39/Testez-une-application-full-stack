@@ -28,6 +28,7 @@ private TeacherService underTest;
 private Teacher teacher;
     @BeforeEach
     void setUp() {
+        teacherRepository.deleteAll();
         teacher = Teacher.builder()
                 .id(1L)
                 .firstName("John")

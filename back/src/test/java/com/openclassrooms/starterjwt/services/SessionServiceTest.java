@@ -53,6 +53,7 @@ class SessionServiceTest {
 
     @BeforeEach
     void setUp() {
+        sessionRepository.deleteAll();
         user1 = User.builder()
                 .id(1L)
                 .email("user1@example.com")

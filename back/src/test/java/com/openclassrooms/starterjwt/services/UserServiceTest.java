@@ -26,6 +26,7 @@ public class UserServiceTest {
 
     @BeforeEach
     void setUp(){
+        userRepository.deleteAll();
         mockUser=User.builder()
                 .email("test@test.com")
                 .firstName("Prenom")

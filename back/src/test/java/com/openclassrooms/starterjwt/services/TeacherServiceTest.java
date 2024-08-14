@@ -24,8 +24,16 @@ private TeacherRepository teacherRepository;
 
 @InjectMocks
 private TeacherService underTest;
+
+private Teacher teacher;
     @BeforeEach
     void setUp() {
+        teacher = Teacher.builder()
+                .id(1L)
+                .firstName("John")
+                .lastName("Doe")
+                .build();
+
         underTest = new TeacherService(teacherRepository);
     }
 
@@ -39,12 +47,6 @@ private TeacherService underTest;
     @Test
     public void testFindById() {
         // Given
-        Teacher teacher = Teacher.builder()
-                .id(1L)
-                .firstName("John")
-                .lastName("Doe")
-                .build();
-
         when(teacherRepository.findById(1L)).thenReturn(java.util.Optional.of(teacher));
 
         // When

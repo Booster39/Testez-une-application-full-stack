@@ -46,46 +46,46 @@ class SessionServiceTest {
     @Mock
     private User user;
 
-   User user1 = User.builder()
-            .id(1L)
-            .email("user1@example.com")
-        .lastName("Smith")
-        .firstName("John")
-        .password("password1")
-        .admin(false).build();
-
-    User user2 = User.builder()
-            .id(2L)
-            .email("user2@example.com")
-            .lastName("Doe")
-            .firstName("Jane")
-            .password("password2")
-            .admin(false).build();
-
-    public List<User> userList = new ArrayList<User>();
-    public static List<User> createUsers(List<User> userList, User user1, User user2) {
-        userList.add(user1);
-        userList.add(user2);
-        return userList;
-    }
-
-
-    @Mock
-    private Date date;
+    private User user1;
+    private User user2;
+    private List<User> userList;
+    private Session session;
 
     @BeforeEach
     void setUp() {
+        user1 = User.builder()
+                .id(1L)
+                .email("user1@example.com")
+                .lastName("Smith")
+                .firstName("John")
+                .password("password1")
+                .admin(false)
+                .build();
+
+        user2 = User.builder()
+                .id(2L)
+                .email("user2@example.com")
+                .lastName("Doe")
+                .firstName("Jane")
+                .password("password2")
+                .admin(false)
+                .build();
+
+        userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+
+        session = Session.builder()
+                .id(1L)
+                .teacher(teacher)
+                .description("description")
+                .name("Lisa")
+                .users(userList)
+                .date(new Date())
+                .build();
+
         underTest = new SessionService(sessionRepository, userRepository);
     }
-
-    Session session = Session.builder()
-            .id(1L)
-            .teacher(teacher)
-            .description("description")
-            .name("Lisa")
-            .users(createUsers(userList, user1, user2))
-            .date(date)
-            .build();
 
     @Test
     void checkIfFindAll() {

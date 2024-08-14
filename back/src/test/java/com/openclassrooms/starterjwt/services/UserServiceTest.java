@@ -2,6 +2,7 @@ package com.openclassrooms.starterjwt.services;
 
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,17 +22,24 @@ public class UserServiceTest {
     @InjectMocks
     UserService userService;
 
-    @Test
-    @DisplayName("When I findById valid user, it should return mock and call userRepo")
-    public void testFindValidUserById() {
-        //Given
-        User mockUser=User.builder()
+    private User mockUser;
+
+    @BeforeEach
+    void setUp(){
+        mockUser=User.builder()
                 .email("test@test.com")
                 .firstName("Prenom")
                 .lastName("Nom")
                 .password("123456")
                 .admin(true)
                 .build();
+    }
+
+    @Test
+    @DisplayName("When I findById valid user, it should return mock and call userRepo")
+    public void testFindValidUserById() {
+        //Given
+
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
 

@@ -44,19 +44,24 @@ public class TeacherControllerTest {
     @Autowired
     private SessionRepository sessionRepository;
 
+
+    private Teacher existingTeacher;
+
     @BeforeEach
     void setUp(){
-
-    }
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    public void testFindByIdSuccess() throws Exception {
-        Teacher existingTeacher = Teacher.builder()
+        sessionRepository.deleteAll();
+        teacherRepository.deleteAll();
+        userRepository.deleteAll();
+        existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
+    }
+    @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
+    public void testFindByIdSuccess() throws Exception {
 
         Teacher savedTeacher = teacherRepository.save(existingTeacher);
 
@@ -70,12 +75,7 @@ public class TeacherControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdFail() throws Exception {
-        Teacher existingTeacher = Teacher.builder()
-                .firstName("User")
-                .lastName("Test")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+
         Teacher savedTeacher = teacherRepository.save(existingTeacher);
 
         mockMvc.perform(get("/api/teacher/{id}", 999))
@@ -85,14 +85,6 @@ public class TeacherControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindAllSuccess() throws Exception {
-        Teacher existingTeacher = Teacher.builder()
-                .firstName("User")
-                .lastName("Test")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
-        teacherRepository.deleteAll();
-        sessionRepository.deleteAll();
         teacherRepository.save(existingTeacher);
 
         mockMvc.perform(get("/api/teacher/"))

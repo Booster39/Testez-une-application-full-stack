@@ -87,16 +87,18 @@ describe('Edit session spec', () => {
   it('Displays error when required fields are missing', () => {
     cy.contains('Create').click()
     cy.url().should('eq', 'http://localhost:4200/sessions/create')
-
+  
     cy.get('input[formControlName=name]').type("Session 1")
     cy.get('input[formControlName=date]').type("2023-12-12")
     cy.get('mat-select[ng-reflect-name=teacher_id]').click()
     cy.contains('Margot').click()
+  
     cy.get('textarea[formControlName=description]').clear()
-
-    cy.contains('Save').click()
-    cy.get('textarea[formControlName=description]').should('have.class', 'ng-invalid')
+  
     cy.get('button[type=submit]').should('be.disabled')
-    cy.url().should('eq', 'http://localhost:4200/sessions/update/1')
+    cy.get('textarea[formControlName=description]').should('have.class', 'ng-invalid')
+    cy.url().should('eq', 'http://localhost:4200/sessions/create')
   })
+  
+  
 })

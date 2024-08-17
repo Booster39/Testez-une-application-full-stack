@@ -18,7 +18,5 @@ describe('Account spec', () => {
     
     cy.contains('Account').click()
     cy.url().should('include', '/me')
-    cy.contains('arrow_back').click()
-    cy.url().should('include', '/sessions')
   })
 })

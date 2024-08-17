@@ -43,11 +43,9 @@ describe('Register spec', () => {
 
     it('Displays error when required fields are missing', () => {
       cy.visit('/register')
-  
-      // Attempt to submit the form without filling in any fields
+
       cy.get('button[type=submit]').should('be.disabled')
   
-      // Check that the email and password input fields have the 'ng-invalid' class
       cy.get('input[formControlName=firstName]').should('have.class', 'ng-invalid')
       cy.get('input[formControlName=lastName]').should('have.class', 'ng-invalid')
       cy.get('input[formControlName=email]').should('have.class', 'ng-invalid')

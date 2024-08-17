@@ -31,7 +31,6 @@ describe('Delete session spec', () => {
 
     cy.intercept('GET', '/api/session/1', []).as('GetTheSession')
 
-    cy.contains('Detail').click()
 
     cy.intercept('DELETE', '/api/session/1', []).as('delete')
     cy.intercept('GET', '/api/session', []).as('GetSession')

@@ -48,21 +48,20 @@ public class TeacherControllerTest {
     private Teacher existingTeacher;
 
     @BeforeEach
-    void setUp(){
+    void clean(){
         sessionRepository.deleteAll();
         teacherRepository.deleteAll();
         userRepository.deleteAll();
+    }
+    @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
+    public void testFindByIdSuccess() throws Exception {
         existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-    }
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    public void testFindByIdSuccess() throws Exception {
-
         Teacher savedTeacher = teacherRepository.save(existingTeacher);
 
         mockMvc.perform(get("/api/teacher/{id}", savedTeacher.getId()))
@@ -75,7 +74,12 @@ public class TeacherControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdFail() throws Exception {
-
+        existingTeacher = Teacher.builder()
+                .firstName("User")
+                .lastName("Test")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         Teacher savedTeacher = teacherRepository.save(existingTeacher);
 
         mockMvc.perform(get("/api/teacher/{id}", 999))
@@ -85,6 +89,12 @@ public class TeacherControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindAllSuccess() throws Exception {
+        existingTeacher = Teacher.builder()
+                .firstName("User")
+                .lastName("Test")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         teacherRepository.save(existingTeacher);
 
         mockMvc.perform(get("/api/teacher/"))

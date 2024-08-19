@@ -81,8 +81,14 @@ public class UserControllerTest {
     private  User existingUser;
 
     @BeforeEach
-    void setUp(){
-         existingUser = User.builder()
+    void clean(){
+        userRepository.deleteAll();
+    }
+
+    @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
+    public void testFindByIdSuccess() throws Exception {
+        existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
                 .lastName("Test")
@@ -91,11 +97,6 @@ public class UserControllerTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-    }
-
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    public void testFindByIdSuccess() throws Exception {
         userRepository.save(existingUser);
 
         mockMvc.perform(get("/api/user/{id}", existingUser.getId()))
@@ -108,6 +109,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdNotFound() throws Exception {
+        existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         mockMvc.perform(get("/api/user/{id}", 999))
                 .andExpect(status().isNotFound());
     }
@@ -115,6 +125,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdBadRequest() throws Exception {
+        existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         mockMvc.perform(get("/api/user/{id}", "invalidId"))
                 .andExpect(status().isBadRequest());
     }
@@ -124,6 +143,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser@example.com")
     public void testDeleteUserNotFound() throws Exception {
+        existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         mockMvc.perform(delete("/api/user/{id}", 999)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -131,6 +159,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser@example.com")
     public void testDeleteUserSuccess() throws Exception {
+        existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         // Save the user to the repository
         existingUser = userRepository.save(existingUser);
 
@@ -146,6 +183,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "anotheruser@example.com")
     public void testDeleteUserUnauthorized() throws Exception {
+        existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         // Save the user to the repository
         existingUser = userRepository.save(existingUser);
 

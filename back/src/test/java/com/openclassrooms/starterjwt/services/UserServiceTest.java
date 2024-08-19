@@ -25,8 +25,14 @@ public class UserServiceTest {
     private User mockUser;
 
     @BeforeEach
-    void setUp(){
+    void clean(){
         userRepository.deleteAll();
+    }
+
+    @Test
+    @DisplayName("When I findById valid user, it should return mock and call userRepo")
+    public void testFindValidUserById() {
+        //Given
         mockUser=User.builder()
                 .email("test@test.com")
                 .firstName("Prenom")
@@ -34,13 +40,6 @@ public class UserServiceTest {
                 .password("123456")
                 .admin(true)
                 .build();
-    }
-
-    @Test
-    @DisplayName("When I findById valid user, it should return mock and call userRepo")
-    public void testFindValidUserById() {
-        //Given
-
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
 
@@ -56,7 +55,13 @@ public class UserServiceTest {
     @DisplayName("When I delete user, it should call user repo")
     public void testDeleteExistingUserById() {
         //Given
-
+        mockUser=User.builder()
+                .email("test@test.com")
+                .firstName("Prenom")
+                .lastName("Nom")
+                .password("123456")
+                .admin(true)
+                .build();
         //When
         userService.delete(3L);
 

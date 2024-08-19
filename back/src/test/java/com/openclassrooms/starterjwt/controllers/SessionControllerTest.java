@@ -66,9 +66,16 @@ public class SessionControllerTest {
     private Session existingSession;
 
     @BeforeEach
-    public void setUp() {
+    public void clean() {
         // Clean up before each test
-         existingUser = User.builder()
+        sessionRepository.deleteAll();
+    userRepository.deleteAll();
+    }
+
+    @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
+    public void testFindByIdSuccess() throws Exception {
+        existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
                 .lastName("Test")
@@ -96,12 +103,6 @@ public class SessionControllerTest {
                 .teacher(existingTeacher)
                 .users(list)
                 .build();
-    }
-
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    public void testFindByIdSuccess() throws Exception {
-
         userRepository.save(existingUser);
         teacherRepository.save(existingTeacher);
 
@@ -117,7 +118,34 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdFail() throws Exception {
+        existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(false)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        list = Collections.singletonList(existingUser);
 
+
+        // Creating Teacher with builder
+        existingTeacher = Teacher.builder()
+                .firstName("User")
+                .lastName("Test")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // Creating Session with builder
+        existingSession = Session.builder()
+                .name("Yoga")
+                .date(new Date())
+                .description("Nouvelle session")
+                .teacher(existingTeacher)
+                .users(list)
+                .build();
         userRepository.save(existingUser);
         teacherRepository.save(existingTeacher);
 
@@ -132,7 +160,34 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindAllSuccess() throws Exception {
-        sessionRepository.deleteAll();
+        existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(false)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        list = Collections.singletonList(existingUser);
+
+
+        // Creating Teacher with builder
+        existingTeacher = Teacher.builder()
+                .firstName("User")
+                .lastName("Test")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // Creating Session with builder
+        existingSession = Session.builder()
+                .name("Yoga")
+                .date(new Date())
+                .description("Nouvelle session")
+                .teacher(existingTeacher)
+                .users(list)
+                .build();
         userRepository.save(existingUser);
         teacherRepository.save(existingTeacher);
 
@@ -147,6 +202,34 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testCreateSessionSuccess() throws Exception {
+        existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(false)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        list = Collections.singletonList(existingUser);
+
+
+        // Creating Teacher with builder
+        existingTeacher = Teacher.builder()
+                .firstName("User")
+                .lastName("Test")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // Creating Session with builder
+        existingSession = Session.builder()
+                .name("Yoga")
+                .date(new Date())
+                .description("Nouvelle session")
+                .teacher(existingTeacher)
+                .users(list)
+                .build();
         userRepository.save(existingUser);
         teacherRepository.save(existingTeacher);
 
@@ -169,6 +252,34 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testUpdateSessionSuccess() throws Exception {
+        existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(false)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        list = Collections.singletonList(existingUser);
+
+
+        // Creating Teacher with builder
+        existingTeacher = Teacher.builder()
+                .firstName("User")
+                .lastName("Test")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // Creating Session with builder
+        existingSession = Session.builder()
+                .name("Yoga")
+                .date(new Date())
+                .description("Nouvelle session")
+                .teacher(existingTeacher)
+                .users(list)
+                .build();
         userRepository.save(existingUser);
         teacherRepository.save(existingTeacher);
         Session savedSession = sessionRepository.save(existingSession);
@@ -187,6 +298,34 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testDeleteSessionSuccess() throws Exception {
+        existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(false)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        list = Collections.singletonList(existingUser);
+
+
+        // Creating Teacher with builder
+        existingTeacher = Teacher.builder()
+                .firstName("User")
+                .lastName("Test")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // Creating Session with builder
+        existingSession = Session.builder()
+                .name("Yoga")
+                .date(new Date())
+                .description("Nouvelle session")
+                .teacher(existingTeacher)
+                .users(list)
+                .build();
         userRepository.save(existingUser);
         teacherRepository.save(existingTeacher);
         Session savedSession = sessionRepository.save(existingSession);
@@ -200,6 +339,34 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testParticipateInSessionSuccess() throws Exception {
+        existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(false)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        list = Collections.singletonList(existingUser);
+
+
+        // Creating Teacher with builder
+        existingTeacher = Teacher.builder()
+                .firstName("User")
+                .lastName("Test")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // Creating Session with builder
+        existingSession = Session.builder()
+                .name("Yoga")
+                .date(new Date())
+                .description("Nouvelle session")
+                .teacher(existingTeacher)
+                .users(list)
+                .build();
         userRepository.save(existingUser);
         teacherRepository.save(existingTeacher);
         Session savedSession = sessionRepository.save(existingSession);
@@ -225,6 +392,34 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testNoLongerParticipateInSessionSuccess() throws Exception {
+        existingUser = User.builder()
+                .email("testuser@example.com")
+                .firstName("User")
+                .lastName("Test")
+                .password("password123")
+                .admin(false)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        list = Collections.singletonList(existingUser);
+
+
+        // Creating Teacher with builder
+        existingTeacher = Teacher.builder()
+                .firstName("User")
+                .lastName("Test")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // Creating Session with builder
+        existingSession = Session.builder()
+                .name("Yoga")
+                .date(new Date())
+                .description("Nouvelle session")
+                .teacher(existingTeacher)
+                .users(list)
+                .build();
         userRepository.save(existingUser);
         teacherRepository.save(existingTeacher);
         Session savedSession = sessionRepository.save(existingSession);

@@ -27,19 +27,18 @@ private TeacherService underTest;
 
 private Teacher teacher;
     @BeforeEach
-    void setUp() {
+    void clean() {
         teacherRepository.deleteAll();
+    }
+
+    @Test
+    void checkIfFindAll() {
         teacher = Teacher.builder()
                 .id(1L)
                 .firstName("John")
                 .lastName("Doe")
                 .build();
 
-        underTest = new TeacherService(teacherRepository);
-    }
-
-    @Test
-    void checkIfFindAll() {
         //when
         underTest.findAll();
         //then
@@ -48,6 +47,12 @@ private Teacher teacher;
     @Test
     public void testFindById() {
         // Given
+        teacher = Teacher.builder()
+                .id(1L)
+                .firstName("John")
+                .lastName("Doe")
+                .build();
+
         when(teacherRepository.findById(1L)).thenReturn(java.util.Optional.of(teacher));
 
         // When

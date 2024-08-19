@@ -53,12 +53,15 @@ public class AuthControllerTest {
     private LoginRequest loginRequest;
 
     @BeforeEach
-    public void setUp() {
+    public void clean() {
         // Clean up before each test
         sessionRepository.deleteAll();
         teacherRepository.deleteAll();
         userRepository.deleteAll();
+    }
 
+    @Test
+    public void testRegisterUserSuccess() throws Exception {
         signupRequest = new SignupRequest();
         signupRequest.setEmail("testuser@example.com");
         signupRequest.setFirstName("Test");
@@ -69,11 +72,6 @@ public class AuthControllerTest {
         loginRequest = new LoginRequest();
         loginRequest.setEmail("testuser@example.com");
         loginRequest.setPassword("password123");
-    }
-
-    @Test
-    public void testRegisterUserSuccess() throws Exception {
-
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(signupRequest)))
@@ -83,6 +81,16 @@ public class AuthControllerTest {
 
     @Test
     public void testRegisterUserWithExistingEmail() throws Exception {
+        signupRequest = new SignupRequest();
+        signupRequest.setEmail("testuser@example.com");
+        signupRequest.setFirstName("Test");
+        signupRequest.setLastName("User");
+        signupRequest.setPassword("password123");
+
+        existingUser = new User("testuser@example.com", "User", "Test", passwordEncoder.encode("password123"), false);
+        loginRequest = new LoginRequest();
+        loginRequest.setEmail("testuser@example.com");
+        loginRequest.setPassword("password123");
         // Create a user in the database
         userRepository.save(existingUser);
 
@@ -95,6 +103,16 @@ public class AuthControllerTest {
 
     @Test
     public void testAuthenticateUserSuccess() throws Exception {
+        signupRequest = new SignupRequest();
+        signupRequest.setEmail("testuser@example.com");
+        signupRequest.setFirstName("Test");
+        signupRequest.setLastName("User");
+        signupRequest.setPassword("password123");
+
+        existingUser = new User("testuser@example.com", "User", "Test", passwordEncoder.encode("password123"), false);
+        loginRequest = new LoginRequest();
+        loginRequest.setEmail("testuser@example.com");
+        loginRequest.setPassword("password123");
         // Create a user in the database
         userRepository.save(existingUser);
 
@@ -111,6 +129,16 @@ public class AuthControllerTest {
 
     @Test
     public void testAuthenticateUserWithInvalidCredentials() throws Exception {
+        signupRequest = new SignupRequest();
+        signupRequest.setEmail("testuser@example.com");
+        signupRequest.setFirstName("Test");
+        signupRequest.setLastName("User");
+        signupRequest.setPassword("password123");
+
+        existingUser = new User("testuser@example.com", "User", "Test", passwordEncoder.encode("password123"), false);
+        loginRequest = new LoginRequest();
+        loginRequest.setEmail("testuser@example.com");
+        loginRequest.setPassword("password123");
         // Create a user in the database
         userRepository.save(existingUser);
         loginRequest.setPassword("wrongpassword");

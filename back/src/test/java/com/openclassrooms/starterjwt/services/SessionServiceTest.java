@@ -52,8 +52,209 @@ class SessionServiceTest {
     private Session session;
 
     @BeforeEach
-    void setUp() {
+    void clean() {
         sessionRepository.deleteAll();
+
+    }
+
+    @Test
+    void checkIfFindAll() {
+        user1 = User.builder()
+                .id(1L)
+                .email("user1@example.com")
+                .lastName("Smith")
+                .firstName("John")
+                .password("password1")
+                .admin(false)
+                .build();
+
+        user2 = User.builder()
+                .id(2L)
+                .email("user2@example.com")
+                .lastName("Doe")
+                .firstName("Jane")
+                .password("password2")
+                .admin(false)
+                .build();
+
+        userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+
+        session = Session.builder()
+                .id(1L)
+                .teacher(teacher)
+                .description("description")
+                .name("Lisa")
+                .users(userList)
+                .date(new Date())
+                .build();
+        //when
+        underTest.findAll();
+        //then
+        verify(sessionRepository).findAll();
+    }
+
+    @Test
+    void checkIfCreated() {
+        //given
+        user1 = User.builder()
+                .id(1L)
+                .email("user1@example.com")
+                .lastName("Smith")
+                .firstName("John")
+                .password("password1")
+                .admin(false)
+                .build();
+
+        user2 = User.builder()
+                .id(2L)
+                .email("user2@example.com")
+                .lastName("Doe")
+                .firstName("Jane")
+                .password("password2")
+                .admin(false)
+                .build();
+
+        userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+
+        session = Session.builder()
+                .id(1L)
+                .teacher(teacher)
+                .description("description")
+                .name("Lisa")
+                .users(userList)
+                .date(new Date())
+                .build();
+        //when
+        underTest.create(session);
+        //then
+        verify(sessionRepository).save(eq(session));
+    }
+
+
+    @Test
+    void checkIfDeleted() {
+        //given
+        user1 = User.builder()
+                .id(1L)
+                .email("user1@example.com")
+                .lastName("Smith")
+                .firstName("John")
+                .password("password1")
+                .admin(false)
+                .build();
+
+        user2 = User.builder()
+                .id(2L)
+                .email("user2@example.com")
+                .lastName("Doe")
+                .firstName("Jane")
+                .password("password2")
+                .admin(false)
+                .build();
+
+        userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+
+        session = Session.builder()
+                .id(1L)
+                .teacher(teacher)
+                .description("description")
+                .name("Lisa")
+                .users(userList)
+                .date(new Date())
+                .build();
+        //when
+        underTest.delete(session.getId());
+        //then
+        verify(sessionRepository).deleteById(eq(session.getId()));
+    }
+
+    @Test
+    void checkIfGetById() {
+        //given
+        user1 = User.builder()
+                .id(1L)
+                .email("user1@example.com")
+                .lastName("Smith")
+                .firstName("John")
+                .password("password1")
+                .admin(false)
+                .build();
+
+        user2 = User.builder()
+                .id(2L)
+                .email("user2@example.com")
+                .lastName("Doe")
+                .firstName("Jane")
+                .password("password2")
+                .admin(false)
+                .build();
+
+        userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+
+        session = Session.builder()
+                .id(1L)
+                .teacher(teacher)
+                .description("description")
+                .name("Lisa")
+                .users(userList)
+                .date(new Date())
+                .build();
+        //when
+        underTest.getById(session.getId());
+        //then
+        verify(sessionRepository).findById(eq(session.getId()));
+    }
+
+    @Test
+    void checkIfUpdated() {
+        //given
+        user1 = User.builder()
+                .id(1L)
+                .email("user1@example.com")
+                .lastName("Smith")
+                .firstName("John")
+                .password("password1")
+                .admin(false)
+                .build();
+
+        user2 = User.builder()
+                .id(2L)
+                .email("user2@example.com")
+                .lastName("Doe")
+                .firstName("Jane")
+                .password("password2")
+                .admin(false)
+                .build();
+
+        userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+
+        session = Session.builder()
+                .id(1L)
+                .teacher(teacher)
+                .description("description")
+                .name("Lisa")
+                .users(userList)
+                .date(new Date())
+                .build();
+        //when
+        underTest.update(1L, session);
+        //then
+        verify(sessionRepository).save(eq(session));
+    }
+
+    @Test
+    void checkIfParticipateReturnNotFoundException() {
+        //given
         user1 = User.builder()
                 .id(1L)
                 .email("user1@example.com")
@@ -85,62 +286,7 @@ class SessionServiceTest {
                 .date(new Date())
                 .build();
 
-        underTest = new SessionService(sessionRepository, userRepository);
-    }
 
-    @Test
-    void checkIfFindAll() {
-        //when
-        underTest.findAll();
-        //then
-        verify(sessionRepository).findAll();
-    }
-
-    @Test
-    void checkIfCreated() {
-        //given
-        //when
-        underTest.create(session);
-        //then
-        verify(sessionRepository).save(eq(session));
-    }
-
-
-    @Test
-    void checkIfDeleted() {
-        //given
-
-        sessionRepository.save(session);
-        //when
-        underTest.delete(session.getId());
-        //then
-        verify(sessionRepository).deleteById(eq(session.getId()));
-    }
-
-    @Test
-    void checkIfGetById() {
-        //given
-        sessionRepository.save(session);
-        //when
-        underTest.getById(session.getId());
-        //then
-        verify(sessionRepository).findById(eq(session.getId()));
-    }
-
-    @Test
-    void checkIfUpdated() {
-        //given
-
-        //when
-        underTest.update(1L, session);
-        //then
-        verify(sessionRepository).save(eq(session));
-    }
-
-    @Test
-    void checkIfParticipateReturnNotFoundException() {
-        //given
-        sessionRepository.save(session);
         Long sessionId = session.getId();
         long userId = user.getId();
 
@@ -149,6 +295,36 @@ class SessionServiceTest {
 
    @Test
     void checkIfParticipateBadRequestException() {
+       user1 = User.builder()
+               .id(1L)
+               .email("user1@example.com")
+               .lastName("Smith")
+               .firstName("John")
+               .password("password1")
+               .admin(false)
+               .build();
+
+       user2 = User.builder()
+               .id(2L)
+               .email("user2@example.com")
+               .lastName("Doe")
+               .firstName("Jane")
+               .password("password2")
+               .admin(false)
+               .build();
+
+       userList = new ArrayList<>();
+       userList.add(user1);
+       userList.add(user2);
+
+       session = Session.builder()
+               .id(1L)
+               .teacher(teacher)
+               .description("description")
+               .name("Lisa")
+               .users(userList)
+               .date(new Date())
+               .build();
        Long sessionId = 1L;
        Long userId = 2L;
 
@@ -166,6 +342,37 @@ class SessionServiceTest {
 
     @Test
     void checkIfParticipateAddUser() {
+
+        user1 = User.builder()
+                .id(1L)
+                .email("user1@example.com")
+                .lastName("Smith")
+                .firstName("John")
+                .password("password1")
+                .admin(false)
+                .build();
+
+        user2 = User.builder()
+                .id(2L)
+                .email("user2@example.com")
+                .lastName("Doe")
+                .firstName("Jane")
+                .password("password2")
+                .admin(false)
+                .build();
+
+        userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+
+        session = Session.builder()
+                .id(1L)
+                .teacher(teacher)
+                .description("description")
+                .name("Lisa")
+                .users(userList)
+                .date(new Date())
+                .build();
         Long sessionId = 1L;
         Long userId = 2L;
         List<User> voidList = new ArrayList<User>();
@@ -189,7 +396,36 @@ class SessionServiceTest {
     @Test
     void checkIfNoLongerParticipateThrowsNotFoundException() {
         //given
-        sessionRepository.save(session);
+        user1 = User.builder()
+                .id(1L)
+                .email("user1@example.com")
+                .lastName("Smith")
+                .firstName("John")
+                .password("password1")
+                .admin(false)
+                .build();
+
+        user2 = User.builder()
+                .id(2L)
+                .email("user2@example.com")
+                .lastName("Doe")
+                .firstName("Jane")
+                .password("password2")
+                .admin(false)
+                .build();
+
+        userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+
+        session = Session.builder()
+                .id(1L)
+                .teacher(teacher)
+                .description("description")
+                .name("Lisa")
+                .users(userList)
+                .date(new Date())
+                .build();
         Long sessionId = session.getId();
         long userId = user.getId();
         // when
@@ -200,6 +436,36 @@ class SessionServiceTest {
     @Test
     void checkIfNoLongerParticipateBadRequestException() {
         //given
+        user1 = User.builder()
+                .id(1L)
+                .email("user1@example.com")
+                .lastName("Smith")
+                .firstName("John")
+                .password("password1")
+                .admin(false)
+                .build();
+
+        user2 = User.builder()
+                .id(2L)
+                .email("user2@example.com")
+                .lastName("Doe")
+                .firstName("Jane")
+                .password("password2")
+                .admin(false)
+                .build();
+
+        userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+
+        session = Session.builder()
+                .id(1L)
+                .teacher(teacher)
+                .description("description")
+                .name("Lisa")
+                .users(userList)
+                .date(new Date())
+                .build();
         Long sessionId = 1L;
         Long userId = 2L;
 
@@ -215,6 +481,37 @@ class SessionServiceTest {
 
     @Test
     void checkIfNoLongerParticipateAddUser() {
+        user1 = User.builder()
+                .id(1L)
+                .email("user1@example.com")
+                .lastName("Smith")
+                .firstName("John")
+                .password("password1")
+                .admin(false)
+                .build();
+
+        user2 = User.builder()
+                .id(2L)
+                .email("user2@example.com")
+                .lastName("Doe")
+                .firstName("Jane")
+                .password("password2")
+                .admin(false)
+                .build();
+
+        userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+
+        session = Session.builder()
+                .id(1L)
+                .teacher(teacher)
+                .description("description")
+                .name("Lisa")
+                .users(userList)
+                .date(new Date())
+                .build();
+
         Long sessionId = 1L;
         Long userId = 2L;
         List<User> voidList = new ArrayList<User>();

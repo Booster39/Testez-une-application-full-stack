@@ -9,6 +9,9 @@ import { of } from 'rxjs';
 import { SessionService } from '../../../../services/session.service';
 import { DetailComponent } from './detail.component';
 import { SessionApiService } from '../../services/session-api.service';
+import { Teacher } from 'src/app/interfaces/teacher.interface';
+import { TeacherService } from 'src/app/services/teacher.service';
+import { Session } from '../../interfaces/session.interface';
 
 describe('DetailComponent', () => {
   let component: DetailComponent;
@@ -115,6 +118,30 @@ describe('DetailComponent', () => {
       expect(TestBed.inject(SessionApiService).detail).toHaveBeenCalledWith(
         component.sessionId
       );
+    });
+  });
+
+  it('should fetch session and set session', () => {
+    const mockSession: Session = {
+      id: 1,
+      teacher_id: 2,
+      users: [1, 3],
+      name: '',
+      description: '',
+      date: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+  
+    jest.spyOn(TestBed.inject(SessionApiService), 'detail').mockReturnValue(of(mockSession));
+  // @ts-ignore
+    component.fetchSession();
+  
+    expect(TestBed.inject(SessionApiService).detail).toHaveBeenCalledWith(component.sessionId);
+  
+    // Wait for the session to be set
+    fixture.whenStable().then(() => {
+      expect(component.session).toEqual(mockSession);
     });
   });
 });

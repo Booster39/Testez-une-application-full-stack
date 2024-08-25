@@ -99,4 +99,22 @@ describe('DetailComponent', () => {
       );
     });
   });
+
+  it('should call unParticipate and fetch session', () => {
+    jest.spyOn(TestBed.inject(SessionApiService), 'unParticipate').mockReturnValue(of(void 0));
+  
+    component.unParticipate();
+  
+    expect(TestBed.inject(SessionApiService).unParticipate).toHaveBeenCalledWith(
+      component.sessionId,
+      component.userId
+    );
+  
+    // Wait for the fetchSession method to be called
+    fixture.whenStable().then(() => {
+      expect(TestBed.inject(SessionApiService).detail).toHaveBeenCalledWith(
+        component.sessionId
+      );
+    });
+  });
 });

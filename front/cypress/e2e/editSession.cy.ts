@@ -65,16 +65,9 @@ describe('Edit session spec', () => {
     cy.contains('Edit').click()
     cy.url().should('eq', 'http://localhost:4200/sessions/update/1')
 
-    cy.intercept('PUT', '/api/session/1', {
-      id: 1,
-      name: "yoga",
-      date: "2024-06-27T00:00:00.000+00:00",
-      teacher_id: 1,
-      description: "It is not the same session as before.",
-      users: [],
-      createdAt: null,
-      updatedAt: "2024-06-26T13:00:14.8109254"
-    }).as('PutSession')
+    cy.updateSession({
+      description: "It is not the same session as before."
+    })
 
     cy.intercept('GET', '/api/session').as('Sessions')
 
@@ -99,6 +92,4 @@ describe('Edit session spec', () => {
     cy.get('textarea[formControlName=description]').should('have.class', 'ng-invalid')
     cy.url().should('eq', 'http://localhost:4200/sessions/create')
   })
-  
-  
 })

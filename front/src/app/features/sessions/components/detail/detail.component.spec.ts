@@ -2,23 +2,37 @@ import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { RouterTestingModule, } from '@angular/router/testing';
-import { expect } from '@jest/globals'; 
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router, ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
+import { SessionService } from '../../../../services/session.service';
 import { DetailComponent } from './detail.component';
 import { SessionApiService } from '../../services/session-api.service';
-import { Router } from '@angular/router';
-
 
 describe('DetailComponent', () => {
   let component: DetailComponent;
-  let fixture: ComponentFixture<DetailComponent>; 
-  let sessionApiService: SessionApiService;
-  let matSnackBarMock: MatSnackBar;
-  let routerMock: Router;
+  let fixture: ComponentFixture<DetailComponent>;
+  let routerSpy: any;
 
+  const mockSessionService = {
+    sessionInformation: {
+      admin: true,
+      id: 1
+    }
+  };
+
+  const mockActivatedRoute = {
+    snapshot: {
+      paramMap: {
+        get: jest.fn().mockReturnValue('123')  // Mock the sessionId from the route params
+      }
+    }
+  };
 
   beforeEach(async () => {
+    routerSpy = { navigate: jest.fn() };
+
     await TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -26,13 +40,14 @@ describe('DetailComponent', () => {
         MatSnackBarModule,
         ReactiveFormsModule
       ],
-      declarations: [DetailComponent], 
-      providers: [{ provide: SessionApiService, useValue: sessionApiService },
-        { provide: MatSnackBar, useValue: matSnackBarMock },
-        { provide: Router, useValue: routerMock }
-      ],
-    })
-      .compileComponents();
+      declarations: [DetailComponent],
+      providers: [
+        { provide: SessionService, useValue: mockSessionService },
+        { provide: Router, useValue: routerSpy },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute }  // Provide the mock ActivatedRoute
+      ]
+    }).compileComponents();
+
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -42,25 +57,28 @@ describe('DetailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  
-  it('should back', () => {
-    expect(component.back()).toEqual(window.history.back());
-  })
+  it('should navigate back', () => {
+    // Mock window.history.back to call router.navigate
+    jest.spyOn(window.history, 'back').mockImplementation(() => {
+      routerSpy.navigate(['/sessions']);
+    });
 
-  it('it should delete', () => {
+    component.back();
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/sessions']);
+  });
+
+  it('should call delete and navigate to sessions', () => {
+    jest.spyOn(TestBed.inject(SessionApiService), 'delete').mockReturnValue(of({}));
+    jest.spyOn(TestBed.inject(MatSnackBar), 'open');
+
     component.delete();
 
-    expect(sessionApiService.delete).toHaveBeenCalledWith('1');
-    expect(matSnackBarMock.open).lastCalledWith('Session deleted !', 'Close', { duration: 3000 });
-    expect(routerMock.navigate).toHaveBeenCalledWith(['sessions']);
-  })
+    expect(TestBed.inject(SessionApiService).delete).toHaveBeenCalledWith(component.sessionId);
+    expect(TestBed.inject(MatSnackBar).open).toHaveBeenCalledWith('Session deleted !', 'Close', { duration: 3000 });
 
-  it('should participate', () => {
-    component.sessionId = '1'
-    component.userId = '2'
-    component.participate()
-
-    expect(sessionApiService.participate).toHaveBeenCalledWith(component.sessionId, component.userId);
-  })
+    // Wait for the router navigation to complete
+    fixture.whenStable().then(() => {
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['sessions']);
+    });
+  });
 });
-

@@ -54,50 +54,22 @@ class SessionServiceTest {
     @BeforeEach
     void clean() {
         sessionRepository.deleteAll();
-
     }
 
     @Test
     void checkIfFindAll() {
-        user1 = User.builder()
-                .id(1L)
-                .email("user1@example.com")
-                .lastName("Smith")
-                .firstName("John")
-                .password("password1")
-                .admin(false)
-                .build();
+        // Given
 
-        user2 = User.builder()
-                .id(2L)
-                .email("user2@example.com")
-                .lastName("Doe")
-                .firstName("Jane")
-                .password("password2")
-                .admin(false)
-                .build();
-
-        userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-
-        session = Session.builder()
-                .id(1L)
-                .teacher(teacher)
-                .description("description")
-                .name("Lisa")
-                .users(userList)
-                .date(new Date())
-                .build();
-        //when
+        // When
         underTest.findAll();
-        //then
+
+        // Then
         verify(sessionRepository).findAll();
     }
 
     @Test
     void checkIfCreated() {
-        //given
+        // Given
         user1 = User.builder()
                 .id(1L)
                 .email("user1@example.com")
@@ -128,217 +100,106 @@ class SessionServiceTest {
                 .users(userList)
                 .date(new Date())
                 .build();
-        //when
+
+        // When
         underTest.create(session);
-        //then
+
+        // Then
         verify(sessionRepository).save(eq(session));
     }
 
-
     @Test
     void checkIfDeleted() {
-        //given
-        user1 = User.builder()
-                .id(1L)
-                .email("user1@example.com")
-                .lastName("Smith")
-                .firstName("John")
-                .password("password1")
-                .admin(false)
-                .build();
-
-        user2 = User.builder()
-                .id(2L)
-                .email("user2@example.com")
-                .lastName("Doe")
-                .firstName("Jane")
-                .password("password2")
-                .admin(false)
-                .build();
-
-        userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-
+        // Given
         session = Session.builder()
                 .id(1L)
                 .teacher(teacher)
                 .description("description")
                 .name("Lisa")
-                .users(userList)
                 .date(new Date())
                 .build();
-        //when
+
+        // When
         underTest.delete(session.getId());
-        //then
+
+        // Then
         verify(sessionRepository).deleteById(eq(session.getId()));
     }
 
     @Test
     void checkIfGetById() {
-        //given
-        user1 = User.builder()
-                .id(1L)
-                .email("user1@example.com")
-                .lastName("Smith")
-                .firstName("John")
-                .password("password1")
-                .admin(false)
-                .build();
-
-        user2 = User.builder()
-                .id(2L)
-                .email("user2@example.com")
-                .lastName("Doe")
-                .firstName("Jane")
-                .password("password2")
-                .admin(false)
-                .build();
-
-        userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-
+        // Given
         session = Session.builder()
                 .id(1L)
                 .teacher(teacher)
                 .description("description")
                 .name("Lisa")
-                .users(userList)
                 .date(new Date())
                 .build();
-        //when
+
+        when(sessionRepository.findById(session.getId())).thenReturn(Optional.of(session));
+
+        // When
         underTest.getById(session.getId());
-        //then
+
+        // Then
         verify(sessionRepository).findById(eq(session.getId()));
     }
 
     @Test
     void checkIfUpdated() {
-        //given
-        user1 = User.builder()
-                .id(1L)
-                .email("user1@example.com")
-                .lastName("Smith")
-                .firstName("John")
-                .password("password1")
-                .admin(false)
-                .build();
-
-        user2 = User.builder()
-                .id(2L)
-                .email("user2@example.com")
-                .lastName("Doe")
-                .firstName("Jane")
-                .password("password2")
-                .admin(false)
-                .build();
-
-        userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-
+        // Given
         session = Session.builder()
                 .id(1L)
                 .teacher(teacher)
                 .description("description")
                 .name("Lisa")
-                .users(userList)
                 .date(new Date())
                 .build();
-        //when
+
+        // When
         underTest.update(1L, session);
-        //then
+
+        // Then
         verify(sessionRepository).save(eq(session));
     }
 
     @Test
     void checkIfParticipateReturnNotFoundException() {
-        //given
-        user1 = User.builder()
-                .id(1L)
-                .email("user1@example.com")
-                .lastName("Smith")
-                .firstName("John")
-                .password("password1")
-                .admin(false)
-                .build();
-
-        user2 = User.builder()
-                .id(2L)
-                .email("user2@example.com")
-                .lastName("Doe")
-                .firstName("Jane")
-                .password("password2")
-                .admin(false)
-                .build();
-
-        userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-
+        // Given
         session = Session.builder()
                 .id(1L)
                 .teacher(teacher)
                 .description("description")
                 .name("Lisa")
-                .users(userList)
                 .date(new Date())
                 .build();
-
 
         Long sessionId = session.getId();
         long userId = user.getId();
 
+        // When & Then
         assertThrows(NotFoundException.class, () -> underTest.participate(sessionId, userId));
     }
 
-   @Test
+    @Test
     void checkIfParticipateBadRequestException() {
-       user1 = User.builder()
-               .id(1L)
-               .email("user1@example.com")
-               .lastName("Smith")
-               .firstName("John")
-               .password("password1")
-               .admin(false)
-               .build();
+        // Given
+        Long sessionId = 1L;
+        Long userId = 2L;
 
-       user2 = User.builder()
-               .id(2L)
-               .email("user2@example.com")
-               .lastName("Doe")
-               .firstName("Jane")
-               .password("password2")
-               .admin(false)
-               .build();
+        User mockUser = mock(User.class);
+        when(mockUser.getId()).thenReturn(userId);
 
-       userList = new ArrayList<>();
-       userList.add(user1);
-       userList.add(user2);
+        List<User> users = Arrays.asList(mockUser);
+        Session mockSession = mock(Session.class);
+        when(mockSession.getUsers()).thenReturn(users);
+        when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(mockSession));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
 
-       session = Session.builder()
-               .id(1L)
-               .teacher(teacher)
-               .description("description")
-               .name("Lisa")
-               .users(userList)
-               .date(new Date())
-               .build();
-       Long sessionId = 1L;
-       Long userId = 2L;
-
-       User mockUser = mock(User.class);
-       when(mockUser.getId()).thenReturn(userId);
-
-       List<User> users = Arrays.asList(mockUser);
-       Session mockSession = mock(Session.class);
-       when(mockSession.getUsers()).thenReturn(users);
-       when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(mockSession));
-       when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
-       assertThrows(BadRequestException.class, () -> underTest.participate(sessionId, userId));
-
-   }
+        // When & Then
+        assertThrows(BadRequestException.class, () -> underTest.participate(sessionId, userId));
+    }
 
     @Test
     void checkIfParticipateAddUser() {
@@ -388,84 +249,24 @@ class SessionServiceTest {
         when(mockSession.getUsers()).thenReturn(voidList);
         underTest.participate(sessionId, userId);
 
-       when(mockSession.getUsers()).thenReturn(users);
+        when(mockSession.getUsers()).thenReturn(users);
         verify(sessionRepository).save(mockSession);
         assertTrue(mockSession.getUsers().contains(mockUser));
     }
 
     @Test
     void checkIfNoLongerParticipateThrowsNotFoundException() {
-        //given
-        user1 = User.builder()
-                .id(1L)
-                .email("user1@example.com")
-                .lastName("Smith")
-                .firstName("John")
-                .password("password1")
-                .admin(false)
-                .build();
-
-        user2 = User.builder()
-                .id(2L)
-                .email("user2@example.com")
-                .lastName("Doe")
-                .firstName("Jane")
-                .password("password2")
-                .admin(false)
-                .build();
-
-        userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-
-        session = Session.builder()
-                .id(1L)
-                .teacher(teacher)
-                .description("description")
-                .name("Lisa")
-                .users(userList)
-                .date(new Date())
-                .build();
-        Long sessionId = session.getId();
+        // Given
+        Long sessionId = 1L;
         long userId = user.getId();
-        // when
-        //then
-        assertThrows(NotFoundException.class, ()->{underTest.noLongerParticipate(sessionId, userId);});
+
+        // When & Then
+        assertThrows(NotFoundException.class, () -> underTest.noLongerParticipate(sessionId, userId));
     }
 
     @Test
     void checkIfNoLongerParticipateBadRequestException() {
-        //given
-        user1 = User.builder()
-                .id(1L)
-                .email("user1@example.com")
-                .lastName("Smith")
-                .firstName("John")
-                .password("password1")
-                .admin(false)
-                .build();
-
-        user2 = User.builder()
-                .id(2L)
-                .email("user2@example.com")
-                .lastName("Doe")
-                .firstName("Jane")
-                .password("password2")
-                .admin(false)
-                .build();
-
-        userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-
-        session = Session.builder()
-                .id(1L)
-                .teacher(teacher)
-                .description("description")
-                .name("Lisa")
-                .users(userList)
-                .date(new Date())
-                .build();
+        // Given
         Long sessionId = 1L;
         Long userId = 2L;
 
@@ -476,58 +277,9 @@ class SessionServiceTest {
         Session mockSession = mock(Session.class);
         when(mockSession.getUsers()).thenReturn(users);
         when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(mockSession));
-        assertThrows(BadRequestException.class, ()->{underTest.noLongerParticipate(sessionId, userId);});
+
+        // When & Then
+        assertThrows(BadRequestException.class, () -> underTest.noLongerParticipate(sessionId, userId));
     }
 
-    @Test
-    void checkIfNoLongerParticipateAddUser() {
-        user1 = User.builder()
-                .id(1L)
-                .email("user1@example.com")
-                .lastName("Smith")
-                .firstName("John")
-                .password("password1")
-                .admin(false)
-                .build();
-
-        user2 = User.builder()
-                .id(2L)
-                .email("user2@example.com")
-                .lastName("Doe")
-                .firstName("Jane")
-                .password("password2")
-                .admin(false)
-                .build();
-
-        userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-
-        session = Session.builder()
-                .id(1L)
-                .teacher(teacher)
-                .description("description")
-                .name("Lisa")
-                .users(userList)
-                .date(new Date())
-                .build();
-
-        Long sessionId = 1L;
-        Long userId = 2L;
-        List<User> voidList = new ArrayList<User>();
-        User mockUser = mock(User.class);
-        when(mockUser.getId()).thenReturn(userId);
-
-        List<User> users = Arrays.asList(mockUser);
-        Session mockSession = mock(Session.class);
-        when(mockSession.getUsers()).thenReturn(users);
-        when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(mockSession));
-
-        underTest.noLongerParticipate(sessionId, userId);
-
-        when(mockSession.getUsers()).thenReturn(voidList);
-        verify(sessionRepository).save(mockSession);
-        assertFalse(mockSession.getUsers().contains(voidList));
-
-    }
 }

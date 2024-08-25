@@ -19,13 +19,15 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherServiceTest {
-@Mock
-private TeacherRepository teacherRepository;
 
-@InjectMocks
-private TeacherService underTest;
+    @Mock
+    private TeacherRepository teacherRepository;
 
-private Teacher teacher;
+    @InjectMocks
+    private TeacherService underTest;
+
+    private Teacher teacher;
+
     @BeforeEach
     void clean() {
         teacherRepository.deleteAll();
@@ -33,19 +35,22 @@ private Teacher teacher;
 
     @Test
     void checkIfFindAll() {
+        // Given
         teacher = Teacher.builder()
                 .id(1L)
                 .firstName("John")
                 .lastName("Doe")
                 .build();
 
-        //when
+        // When
         underTest.findAll();
-        //then
+
+        // Then
         verify(teacherRepository).findAll();
     }
+
     @Test
-    public void testFindById() {
+    void testFindById() {
         // Given
         teacher = Teacher.builder()
                 .id(1L)
@@ -62,5 +67,4 @@ private Teacher teacher;
         assertThat(teacherFromService).isEqualTo(teacher);
         verify(teacherRepository, times(1)).findById(1L);
     }
-
 }

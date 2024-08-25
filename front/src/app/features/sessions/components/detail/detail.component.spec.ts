@@ -81,4 +81,22 @@ describe('DetailComponent', () => {
       expect(routerSpy.navigate).toHaveBeenCalledWith(['sessions']);
     });
   });
+
+  it('should call participate and fetch session', () => {
+    jest.spyOn(TestBed.inject(SessionApiService), 'participate').mockReturnValue(of((void 0)));
+  
+    component.participate();
+  
+    expect(TestBed.inject(SessionApiService).participate).toHaveBeenCalledWith(
+      component.sessionId,
+      component.userId
+    );
+  
+    // Wait for the fetchSession method to be called
+    fixture.whenStable().then(() => {
+      expect(TestBed.inject(SessionApiService).detail).toHaveBeenCalledWith(
+        component.sessionId
+      );
+    });
+  });
 });

@@ -6,8 +6,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SessionService } from 'src/app/services/session.service';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { MeComponent } from './me.component';
+import { of, Observable } from 'rxjs';
+import { UserService } from '../../services/user.service';
 
 describe('MeComponent', () => {
   let component: MeComponent;
@@ -38,7 +41,7 @@ describe('MeComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
+  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -46,7 +49,7 @@ describe('MeComponent', () => {
   it('should back', () => {
     expect(component.back()).toEqual(window.history.back());
   })
+  it('should delete user account', () => {
 
-  it('it should delete', () => {
- })
+     });
 });

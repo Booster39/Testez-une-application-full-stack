@@ -56,6 +56,7 @@ public class TeacherControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdSuccess() throws Exception {
+        //Given
         existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
@@ -63,8 +64,9 @@ public class TeacherControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
         Teacher savedTeacher = teacherRepository.save(existingTeacher);
-
+        //When
         mockMvc.perform(get("/api/teacher/{id}", savedTeacher.getId()))
+        //Then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(savedTeacher.getId().intValue()))
                 .andExpect(jsonPath("$.firstName").value("User"))
@@ -74,6 +76,7 @@ public class TeacherControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdFail() throws Exception {
+        //Given
         existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
@@ -81,23 +84,27 @@ public class TeacherControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
         Teacher savedTeacher = teacherRepository.save(existingTeacher);
-
+        //When
         mockMvc.perform(get("/api/teacher/{id}", 999))
+        //Then
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindAllSuccess() throws Exception {
+        //Given
         existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        teacherRepository.save(existingTeacher);
 
+        teacherRepository.save(existingTeacher);
+        //When
         mockMvc.perform(get("/api/teacher/"))
+        //Then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].firstName", is("User")));

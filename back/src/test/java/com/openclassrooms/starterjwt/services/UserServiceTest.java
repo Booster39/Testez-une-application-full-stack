@@ -24,11 +24,6 @@ public class UserServiceTest {
 
     private User mockUser;
 
-    @BeforeEach
-    void clean(){
-        userRepository.deleteAll();
-    }
-
     @Test
     @DisplayName("When I findById valid user, it should return mock and call userRepo")
     public void testFindValidUserById() {

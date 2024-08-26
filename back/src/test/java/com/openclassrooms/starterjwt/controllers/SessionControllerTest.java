@@ -75,6 +75,7 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdSuccess() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -87,7 +88,6 @@ public class SessionControllerTest {
         list = Collections.singletonList(existingUser);
 
 
-        // Creating Teacher with builder
         existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
@@ -95,7 +95,6 @@ public class SessionControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Creating Session with builder
         existingSession = Session.builder()
                 .name("Yoga")
                 .date(new Date())
@@ -107,8 +106,9 @@ public class SessionControllerTest {
         teacherRepository.save(existingTeacher);
 
         Session savedSession = sessionRepository.save(existingSession);
-
+        //When
         mockMvc.perform(get("/api/session/{id}", savedSession.getId()))
+        //Then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(savedSession.getId().intValue()))
                 .andExpect(jsonPath("$.name").value("Yoga"))
@@ -118,6 +118,7 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdFail() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -130,7 +131,6 @@ public class SessionControllerTest {
         list = Collections.singletonList(existingUser);
 
 
-        // Creating Teacher with builder
         existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
@@ -138,7 +138,6 @@ public class SessionControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Creating Session with builder
         existingSession = Session.builder()
                 .name("Yoga")
                 .date(new Date())
@@ -150,8 +149,9 @@ public class SessionControllerTest {
         teacherRepository.save(existingTeacher);
 
         Session savedSession = sessionRepository.save(existingSession);
-
+        //When
         mockMvc.perform(get("/api/session/{id}", 999))
+        //Then
                 .andExpect(status().isNotFound());
     }
 
@@ -160,6 +160,7 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindAllSuccess() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -172,7 +173,6 @@ public class SessionControllerTest {
         list = Collections.singletonList(existingUser);
 
 
-        // Creating Teacher with builder
         existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
@@ -180,7 +180,6 @@ public class SessionControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Creating Session with builder
         existingSession = Session.builder()
                 .name("Yoga")
                 .date(new Date())
@@ -192,8 +191,9 @@ public class SessionControllerTest {
         teacherRepository.save(existingTeacher);
 
         Session savedSession = sessionRepository.save(existingSession);
-
+        //When
         mockMvc.perform(get("/api/session/"))
+        //Then
                 .andExpect(status().isOk())
          .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("Yoga")));
@@ -202,6 +202,7 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testCreateSessionSuccess() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -214,7 +215,6 @@ public class SessionControllerTest {
         list = Collections.singletonList(existingUser);
 
 
-        // Creating Teacher with builder
         existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
@@ -222,7 +222,6 @@ public class SessionControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Creating Session with builder
         existingSession = Session.builder()
                 .name("Yoga")
                 .date(new Date())
@@ -240,10 +239,11 @@ public class SessionControllerTest {
                 .teacher(existingTeacher)
                 .users(Collections.singletonList(existingUser))
                 .build();
-
+        //When
         mockMvc.perform(post("/api/session/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(sessionMapper.toDto(newSession))))
+        //Then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Pilates"))
                 .andExpect(jsonPath("$.description").value("Nouvelle session de Pilates"));
@@ -252,6 +252,7 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testUpdateSessionSuccess() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -264,7 +265,6 @@ public class SessionControllerTest {
         list = Collections.singletonList(existingUser);
 
 
-        // Creating Teacher with builder
         existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
@@ -272,7 +272,6 @@ public class SessionControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Creating Session with builder
         existingSession = Session.builder()
                 .name("Yoga")
                 .date(new Date())
@@ -286,10 +285,11 @@ public class SessionControllerTest {
 
         savedSession.setName("Updated Yoga");
         savedSession.setDescription("Updated description");
-
+        //When
         mockMvc.perform(put("/api/session/{id}", savedSession.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(sessionMapper.toDto(savedSession))))
+        //Then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Yoga"))
                 .andExpect(jsonPath("$.description").value("Updated description"));
@@ -298,6 +298,7 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testDeleteSessionSuccess() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -310,7 +311,6 @@ public class SessionControllerTest {
         list = Collections.singletonList(existingUser);
 
 
-        // Creating Teacher with builder
         existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
@@ -318,7 +318,6 @@ public class SessionControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Creating Session with builder
         existingSession = Session.builder()
                 .name("Yoga")
                 .date(new Date())
@@ -329,8 +328,9 @@ public class SessionControllerTest {
         userRepository.save(existingUser);
         teacherRepository.save(existingTeacher);
         Session savedSession = sessionRepository.save(existingSession);
-
+        //When
         mockMvc.perform(delete("/api/session/{id}", savedSession.getId()))
+        //Then
                 .andExpect(status().isOk());
 
         assertThat(sessionRepository.findById(savedSession.getId())).isEmpty();
@@ -339,6 +339,7 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testParticipateInSessionSuccess() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -351,7 +352,6 @@ public class SessionControllerTest {
         list = Collections.singletonList(existingUser);
 
 
-        // Creating Teacher with builder
         existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
@@ -359,7 +359,6 @@ public class SessionControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Creating Session with builder
         existingSession = Session.builder()
                 .name("Yoga")
                 .date(new Date())
@@ -381,8 +380,9 @@ public class SessionControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
         userRepository.save(newUser);
-
+        //When
         mockMvc.perform(post("/api/session/{id}/participate/{userId}", savedSession.getId(), newUser.getId()))
+        //Then
                 .andExpect(status().isOk());
 
         Session updatedSession = sessionRepository.findById(savedSession.getId()).orElse(null);
@@ -392,6 +392,7 @@ public class SessionControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testNoLongerParticipateInSessionSuccess() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -404,7 +405,6 @@ public class SessionControllerTest {
         list = Collections.singletonList(existingUser);
 
 
-        // Creating Teacher with builder
         existingTeacher = Teacher.builder()
                 .firstName("User")
                 .lastName("Test")
@@ -412,7 +412,6 @@ public class SessionControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Creating Session with builder
         existingSession = Session.builder()
                 .name("Yoga")
                 .date(new Date())
@@ -423,8 +422,9 @@ public class SessionControllerTest {
         userRepository.save(existingUser);
         teacherRepository.save(existingTeacher);
         Session savedSession = sessionRepository.save(existingSession);
-
+        //When
         mockMvc.perform(delete("/api/session/{id}/participate/{userId}", savedSession.getId(), existingUser.getId()))
+        //Then
                 .andExpect(status().isOk());
 
         Session updatedSession = sessionRepository.findById(savedSession.getId()).orElse(null);

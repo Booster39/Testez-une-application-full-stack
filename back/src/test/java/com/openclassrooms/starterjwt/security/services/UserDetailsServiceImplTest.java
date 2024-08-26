@@ -38,6 +38,7 @@ class UserDetailsServiceImplTest {
 
     @Test
     void checkIfLoadUserByUsernameThrowsUsernameNotFoundException() {
+        //Given
         user = User.builder()
                 .id(1L)
                 .admin(true)
@@ -46,13 +47,15 @@ class UserDetailsServiceImplTest {
                 .lastName("Nafi")
                 .password("pwd")
                 .build();
+        //When
         given(userRepository.findByEmail("okba@gmail.com")).willReturn(Optional.empty());
-
+        //Then
         assertThrows(UsernameNotFoundException.class, () -> underTest.loadUserByUsername("okba@gmail.com"),
                 "User Not Found with email: " + "okba@gmail.com");    }
 
     @Test
     void checkIfLoadUserByUsername() {
+        //Given
         user = User.builder()
                 .id(1L)
                 .admin(true)
@@ -61,12 +64,11 @@ class UserDetailsServiceImplTest {
                 .lastName("Nafi")
                 .password("pwd")
                 .build();
+        //When
         given(userRepository.findByEmail("okba@gmail.com")).willReturn(Optional.of(user));
-
-        // Act
         underTest.loadUserByUsername("okba@gmail.com");
 
-        // Assert
+        //Then
         verify(userRepository).findByEmail("okba@gmail.com");
     }
 }

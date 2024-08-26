@@ -88,6 +88,7 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdSuccess() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -98,8 +99,9 @@ public class UserControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
         userRepository.save(existingUser);
-
+        //When
         mockMvc.perform(get("/api/user/{id}", existingUser.getId()))
+        //Then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(existingUser.getId().intValue()))
                 .andExpect(jsonPath("$.lastName").value("Test"));
@@ -109,6 +111,7 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdNotFound() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -118,13 +121,16 @@ public class UserControllerTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
+        //When
         mockMvc.perform(get("/api/user/{id}", 999))
+        //Then
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void testFindByIdBadRequest() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -134,7 +140,9 @@ public class UserControllerTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
+        //When
         mockMvc.perform(get("/api/user/{id}", "invalidId"))
+        //Then
                 .andExpect(status().isBadRequest());
     }
 
@@ -143,6 +151,7 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser@example.com")
     public void testDeleteUserNotFound() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -152,13 +161,16 @@ public class UserControllerTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
+        //When
         mockMvc.perform(delete("/api/user/{id}", 999)
                         .contentType(MediaType.APPLICATION_JSON))
+        //Then
                 .andExpect(status().isNotFound());
     }
     @Test
     @WithMockUser(username = "testuser@example.com")
     public void testDeleteUserSuccess() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -168,21 +180,23 @@ public class UserControllerTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        // Save the user to the repository
+
         existingUser = userRepository.save(existingUser);
 
-        // Perform the delete request
+        //When
         mockMvc.perform(delete("/api/user/{id}", existingUser.getId())
                         .contentType(MediaType.APPLICATION_JSON))
+        //Then
                 .andExpect(status().isOk());
 
-        // Verify user is actually deleted
+
         assertFalse(userRepository.findById(existingUser.getId()).isPresent());
     }
 
     @Test
     @WithMockUser(username = "anotheruser@example.com")
     public void testDeleteUserUnauthorized() throws Exception {
+        //Given
         existingUser = User.builder()
                 .email("testuser@example.com")
                 .firstName("User")
@@ -192,15 +206,15 @@ public class UserControllerTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        // Save the user to the repository
+
         existingUser = userRepository.save(existingUser);
 
-        // Perform the delete request
+        //When
         mockMvc.perform(delete("/api/user/{id}", existingUser.getId())
                         .contentType(MediaType.APPLICATION_JSON))
+        //Then
                 .andExpect(status().isUnauthorized());
 
-        // Verify the user still exists
         assertTrue(userRepository.findById(existingUser.getId()).isPresent());
     }
 }

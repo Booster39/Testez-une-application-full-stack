@@ -62,6 +62,7 @@ public class AuthControllerTest {
 
     @Test
     public void testRegisterUserSuccess() throws Exception {
+        //Given
         signupRequest = new SignupRequest();
         signupRequest.setEmail("testuser@example.com");
         signupRequest.setFirstName("Test");
@@ -72,15 +73,18 @@ public class AuthControllerTest {
         loginRequest = new LoginRequest();
         loginRequest.setEmail("testuser@example.com");
         loginRequest.setPassword("password123");
+        //When
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(signupRequest)))
+        //Then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("User registered successfully!"));
     }
 
     @Test
     public void testRegisterUserWithExistingEmail() throws Exception {
+        //Given
         signupRequest = new SignupRequest();
         signupRequest.setEmail("testuser@example.com");
         signupRequest.setFirstName("Test");
@@ -91,18 +95,20 @@ public class AuthControllerTest {
         loginRequest = new LoginRequest();
         loginRequest.setEmail("testuser@example.com");
         loginRequest.setPassword("password123");
-        // Create a user in the database
-        userRepository.save(existingUser);
 
+        userRepository.save(existingUser);
+        //When
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(signupRequest)))
+        //Then
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Error: Email is already taken!"));
     }
 
     @Test
     public void testAuthenticateUserSuccess() throws Exception {
+        //Given
         signupRequest = new SignupRequest();
         signupRequest.setEmail("testuser@example.com");
         signupRequest.setFirstName("Test");
@@ -113,12 +119,13 @@ public class AuthControllerTest {
         loginRequest = new LoginRequest();
         loginRequest.setEmail("testuser@example.com");
         loginRequest.setPassword("password123");
-        // Create a user in the database
-        userRepository.save(existingUser);
 
+        userRepository.save(existingUser);
+        //When
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(loginRequest)))
+        //Then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token").exists())
                 .andExpect(jsonPath("$.username").value("testuser@example.com"))
@@ -129,6 +136,7 @@ public class AuthControllerTest {
 
     @Test
     public void testAuthenticateUserWithInvalidCredentials() throws Exception {
+        //Given
         signupRequest = new SignupRequest();
         signupRequest.setEmail("testuser@example.com");
         signupRequest.setFirstName("Test");
@@ -139,13 +147,14 @@ public class AuthControllerTest {
         loginRequest = new LoginRequest();
         loginRequest.setEmail("testuser@example.com");
         loginRequest.setPassword("password123");
-        // Create a user in the database
+
         userRepository.save(existingUser);
         loginRequest.setPassword("wrongpassword");
-
+        //When
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(loginRequest)))
+        //Then
                 .andExpect(status().isUnauthorized());
     }
 

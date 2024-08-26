@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { expect } from '@jest/globals';
 
 import { UserService } from './user.service';
+import { User } from '../interfaces/user.interface';
 
 describe('UserService', () => {
   let service: UserService;
@@ -30,20 +31,30 @@ describe('UserService', () => {
   });
 
   it('it should get user by id', () => {
-    service.getById(id).subscribe();
+    const mockUser: User = {
+      id: 1,
+      email: 'example@example.com',
+      lastName: 'Doe',
+      firstName: 'John',
+      admin: true,
+      password: 'password123',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    service.getById(id).subscribe(user => expect(user).toEqual(mockUser));
 
     const req = httpMock.expectOne(`${path}/${id}`);
 
     expect(req.request.method).toBe('GET');
-    req.flush({});
+    req.flush(mockUser);
   })
 
   it('it should delete user by id', () => {
     service.delete(id).subscribe();
-
+  
     const req = httpMock.expectOne(`${path}/${id}`);
-
+  
     expect(req.request.method).toBe('DELETE');
-    req.flush({})
+    req.flush({});
   })
 });

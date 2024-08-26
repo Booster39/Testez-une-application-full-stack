@@ -47,12 +47,16 @@ describe('TeacherService', () => {
   })
 
   it('it should get a teacher', () => {
-    service.detail(id).subscribe();
-
-    const req = httpMock.expectOne(`${path}/${id}`)
-
+    const mockTeacher: Teacher = { id: 1, lastName: 'Doe', firstName: 'John', createdAt: date, updatedAt: date };
+    
+    service.detail(id).subscribe((teacher) => {
+      expect(teacher).toEqual(mockTeacher);
+    });
+  
+    const req = httpMock.expectOne(`${path}/${id}`);
+  
     expect(req.request.method).toBe("GET");
-    req.flush({});
-  })
+    req.flush(mockTeacher);
+  });
 
 });

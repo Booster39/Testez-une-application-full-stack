@@ -90,7 +90,7 @@ describe('Edit session spec', () => {
       cy.get('textarea[formControlName=description]').clear().type("It is not the same session than before.")
 
       cy.contains('Save').click()
-      cy.url().should('eq', 'http://localhost:4200/sessions')
+      cy.url().should('eq', 'http://localhost:4200/sessions/update/1')
   })
 
   it('Displays error when required fields are missing', () => {

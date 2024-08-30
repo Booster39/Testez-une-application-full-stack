@@ -17,6 +17,7 @@ describe('MeComponent', () => {
   let fixture: ComponentFixture<MeComponent>;
 
   const mockSessionService = {
+    logOut: jest.fn(),
     sessionInformation: {
       admin: true,
       id: 1
@@ -49,7 +50,14 @@ describe('MeComponent', () => {
   it('should back', () => {
     expect(component.back()).toEqual(window.history.back());
   })
-  it('should delete user account', () => {
 
-     });
+  it('should delete user account', () => {
+    jest.spyOn(TestBed.inject(UserService), 'delete').mockReturnValue(of(null));
+    jest.spyOn(TestBed.inject(MatSnackBar), 'open');
+    
+    component.delete();
+    
+    expect(TestBed.inject(UserService).delete).toHaveBeenCalledWith(component['sessionService'].sessionInformation!.id.toString());
+    expect(TestBed.inject(MatSnackBar).open).toHaveBeenCalledWith("Your account has been deleted !", 'Close', { duration: 3000 });
+  });
 });

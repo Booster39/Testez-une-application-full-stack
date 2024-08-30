@@ -50,6 +50,7 @@ describe('SessionsService', () => {
   });
 
   it('it should get all sessions', () => {
+    //Given
     const mockSessions: Session[] = [
       session1,
       session2
@@ -58,69 +59,89 @@ describe('SessionsService', () => {
       expect(sessions).toEqual(mockSessions);
     });
 
+    //When
     const req = httpMock.expectOne(path);
 
+    //Then
     expect(req.request.method).toBe('GET');
     req.flush(mockSessions);
   })
 
   it('it should get a session', () => {
+    //Given
     service.detail(id).subscribe((session) => {
       expect(session).toEqual(session1);});
 
+      //When
     const req = httpMock.expectOne(`${path}/${id}`)
 
+    //Then
     expect(req.request.method).toBe("GET");
     req.flush(session1);
   })
 
   it('it should delete session by id', () => {
+    //Given
     service.delete(id).subscribe((session) => {
       expect(session).toBeUndefined();});
 
+    //When
     const req = httpMock.expectOne(`${path}/${id}`);
 
+    //Then
     expect(req.request.method).toBe('DELETE');
     req.flush({})
   })
 
   it('it should create session', () => {
+    //Given
     service.create(session1).subscribe((createdSession) => {
       expect(createdSession).toEqual(session1)});
 
+    //When
     const req = httpMock.expectOne(path);
 
+    //Then
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(session1);
     req.flush(session1)
   })
 
   it('it should update session', () => {
+    //Given
     service.update(id, session1).subscribe((updatedSession) => {
       expect(updatedSession).toEqual(session1)});
 
+    //When
     const req = httpMock.expectOne(`${path}/${id}`);
 
+    //Then
     expect(req.request.method).toBe('PUT');
     req.flush(session1)
   })
 
   it('it should participe to the session', () => {
+    //Given
     service.participate(id, userId).subscribe((response) => {
       expect(response).toBeUndefined()});
 
+    //When
     const req = httpMock.expectOne(`${path}/${id}/participate/${userId}`);
 
+    //Then
     expect(req.request.method).toBe('POST');
     req.flush({})
   })
 
   it('it should unparticipe to the session', () => {
+    //Given
     service.unParticipate(id, userId).subscribe((response) => {
       expect(response).toBeUndefined()});
 
+    //When
     const req = httpMock.expectOne(`${path}/${id}/participate/${userId}`);
 
+    //Then
     expect(req.request.method).toBe('DELETE');
     req.flush({})
   })

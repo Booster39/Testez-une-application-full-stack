@@ -31,6 +31,7 @@ describe('UserService', () => {
   });
 
   it('it should get user by id', () => {
+    //Given
     const mockUser: User = {
       id: 1,
       email: 'example@example.com',
@@ -43,17 +44,24 @@ describe('UserService', () => {
     };
     service.getById(id).subscribe(user => expect(user).toEqual(mockUser));
 
+    //When
     const req = httpMock.expectOne(`${path}/${id}`);
 
+    //Then
     expect(req.request.method).toBe('GET');
     req.flush(mockUser);
   })
 
   it('it should delete user by id', () => {
-    service.delete(id).subscribe();
+    //Given
+    service.delete(id).subscribe(response => {
+      expect(response).toBeUndefined()
+    });
   
+    //When
     const req = httpMock.expectOne(`${path}/${id}`);
   
+    //Then
     expect(req.request.method).toBe('DELETE');
     req.flush({});
   })

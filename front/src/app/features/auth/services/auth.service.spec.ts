@@ -31,6 +31,7 @@ describe('AuthService', () => {
   });
 
   it('should register a new user', () => {
+    //Given
     const mockRegisterRequest: RegisterRequest = {
       email: 'example@example.com',
       firstName: 'John',
@@ -40,14 +41,17 @@ describe('AuthService', () => {
 
     service.register(mockRegisterRequest).subscribe();
 
+    //When
     const req = httpMock.expectOne('api/auth/register');
 
+    //Then
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockRegisterRequest);
     req.flush({});
   });
 
   it('should login a user', () => {
+    //Given
     const mockLoginRequest: LoginRequest = {
       email: 'example@example.com',
       password: 'password123'
@@ -67,8 +71,10 @@ describe('AuthService', () => {
       expect(sessionInfo).toEqual(mockSessionInformation);
     });
 
+    //When
     const req = httpMock.expectOne('api/auth/login');
 
+    //Then
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockLoginRequest);
 

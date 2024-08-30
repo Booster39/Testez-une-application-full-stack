@@ -62,7 +62,7 @@ describe('FormComponent', () => {
   });
 
   it('should initialize form when component is created', () => {
-    // Arrange
+    //Given
     const session: Session = {
       name: 'Test Session',
       date: new Date('2024-08-29T22:44:27.485Z'),
@@ -80,10 +80,10 @@ describe('FormComponent', () => {
 
     const formBuilderSpy = jest.spyOn(TestBed.inject(FormBuilder), 'group').mockReturnValue(formGroup);
 
-    // Act
+    //When
     component['initForm'](session);
 
-    // Assert
+    //Then
     expect(formBuilderSpy).toHaveBeenCalledWith(expect.objectContaining({
       name: [session.name, [Validators.required]]
     }));

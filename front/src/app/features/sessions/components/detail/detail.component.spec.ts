@@ -92,10 +92,13 @@ describe('DetailComponent', () => {
   });
 
   it('should call participate and fetch session', () => {
+    //Given
     jest.spyOn(TestBed.inject(SessionApiService), 'participate').mockReturnValue(of((void 0)));
   
+    //When
     component.participate();
   
+    //Then
     expect(TestBed.inject(SessionApiService).participate).toHaveBeenCalledWith(
       component.sessionId,
       component.userId
@@ -110,10 +113,13 @@ describe('DetailComponent', () => {
   });
 
   it('should call unParticipate and fetch session', () => {
+    //Given
     jest.spyOn(TestBed.inject(SessionApiService), 'unParticipate').mockReturnValue(of(void 0));
   
+    //When
     component.unParticipate();
   
+    //Then
     expect(TestBed.inject(SessionApiService).unParticipate).toHaveBeenCalledWith(
       component.sessionId,
       component.userId
@@ -128,6 +134,7 @@ describe('DetailComponent', () => {
   });
 
   it('should fetch session and set session', () => {
+    //Given
     const mockSession: Session = {
       id: 1,
       teacher_id: 2,
@@ -141,8 +148,10 @@ describe('DetailComponent', () => {
   
     jest.spyOn(TestBed.inject(SessionApiService), 'detail').mockReturnValue(of(mockSession));
 
+    //When
     (component as any).fetchSession();
   
+    //Then
     expect(TestBed.inject(SessionApiService).detail).toHaveBeenCalledWith(component.sessionId);
   
     // Wait for the session to be set

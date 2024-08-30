@@ -32,6 +32,7 @@ describe('TeacherService', () => {
   });
 
   it('it should get all teachers', () => {
+    //Given
     const mockTeachers: Teacher[] = [
       { id: 1, lastName: 'John Doe', firstName: 'Jane Doe', createdAt: date, updatedAt: date },
       { id: 2, firstName: 'Jane Doe', lastName: 'John Doe', createdAt: date, updatedAt: date }
@@ -40,21 +41,26 @@ describe('TeacherService', () => {
       expect(teachers).toEqual(mockTeachers);
     });
 
+    //When
     const req = httpMock.expectOne(path);
 
+    //Then
     expect(req.request.method).toBe('GET');
     req.flush(mockTeachers);
   })
 
   it('it should get a teacher', () => {
+    //Given
     const mockTeacher: Teacher = { id: 1, lastName: 'Doe', firstName: 'John', createdAt: date, updatedAt: date };
     
     service.detail(id).subscribe((teacher) => {
       expect(teacher).toEqual(mockTeacher);
     });
   
+    //When
     const req = httpMock.expectOne(`${path}/${id}`);
   
+    //Then
     expect(req.request.method).toBe("GET");
     req.flush(mockTeacher);
   });

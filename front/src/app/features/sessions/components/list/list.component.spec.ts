@@ -42,7 +42,6 @@ describe('ListComponent', () => {
   it('should get user session', () => {
     const userSession = component.user;
   
-  // Vérifier que la valeur renvoyée est égale à la valeur de mockSessionService.sessionInformation
   expect(userSession).toEqual(mockSessionService.sessionInformation);
   })
 });

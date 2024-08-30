@@ -65,16 +65,18 @@ describe('SessionsService', () => {
   })
 
   it('it should get a session', () => {
-    service.detail(id).subscribe();
+    service.detail(id).subscribe((session) => {
+      expect(session).toEqual(session1);});
 
     const req = httpMock.expectOne(`${path}/${id}`)
 
     expect(req.request.method).toBe("GET");
-    req.flush({});
+    req.flush(session1);
   })
 
   it('it should delete session by id', () => {
-    service.delete(id).subscribe();
+    service.delete(id).subscribe((session) => {
+      expect(session).toBeUndefined();});
 
     const req = httpMock.expectOne(`${path}/${id}`);
 
@@ -94,16 +96,18 @@ describe('SessionsService', () => {
   })
 
   it('it should update session', () => {
-    service.update(id, session1).subscribe();
+    service.update(id, session1).subscribe((updatedSession) => {
+      expect(updatedSession).toEqual(session1)});
 
     const req = httpMock.expectOne(`${path}/${id}`);
 
     expect(req.request.method).toBe('PUT');
-    req.flush({})
+    req.flush(session1)
   })
 
   it('it should participe to the session', () => {
-    service.participate(id, userId).subscribe();
+    service.participate(id, userId).subscribe((response) => {
+      expect(response).toBeUndefined()});
 
     const req = httpMock.expectOne(`${path}/${id}/participate/${userId}`);
 
@@ -112,7 +116,8 @@ describe('SessionsService', () => {
   })
 
   it('it should unparticipe to the session', () => {
-    service.unParticipate(id, userId).subscribe();
+    service.unParticipate(id, userId).subscribe((response) => {
+      expect(response).toBeUndefined()});
 
     const req = httpMock.expectOne(`${path}/${id}/participate/${userId}`);
 

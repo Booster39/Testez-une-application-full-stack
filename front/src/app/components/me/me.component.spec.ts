@@ -15,6 +15,7 @@ import { UserService } from '../../services/user.service';
 describe('MeComponent', () => {
   let component: MeComponent;
   let fixture: ComponentFixture<MeComponent>;
+  let routerSpy: any;
 
   const mockSessionService = {
     logOut: jest.fn(),
@@ -24,6 +25,7 @@ describe('MeComponent', () => {
     }
   }
   beforeEach(async () => {
+    routerSpy = { navigate: jest.fn() };
     await TestBed.configureTestingModule({
       declarations: [MeComponent],
       imports: [
@@ -34,7 +36,9 @@ describe('MeComponent', () => {
         MatIconModule,
         MatInputModule
       ],
-      providers: [{ provide: SessionService, useValue: mockSessionService }],
+      providers: [{ provide: SessionService, useValue: mockSessionService },
+        {provide: Router, useValue: routerSpy}
+      ],
     })
       .compileComponents();
 
@@ -48,7 +52,16 @@ describe('MeComponent', () => {
   });
 
   it('should back', () => {
-    expect(component.back()).toEqual(window.history.back());
+    //Given
+    jest.spyOn(window.history, 'back').mockImplementation(() => {
+      routerSpy.navigate(['/sessions']);
+    });
+
+    //When
+    component.back();
+
+    //Then
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/sessions']);
   })
 
   it('should delete user account', () => {

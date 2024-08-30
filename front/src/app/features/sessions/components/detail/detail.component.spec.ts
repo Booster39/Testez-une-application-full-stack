@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -61,21 +61,27 @@ describe('DetailComponent', () => {
   });
 
   it('should navigate back', () => {
-    // Mock window.history.back to call router.navigate
+    //Given
     jest.spyOn(window.history, 'back').mockImplementation(() => {
       routerSpy.navigate(['/sessions']);
     });
 
+    //When
     component.back();
+
+    //Then
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/sessions']);
   });
 
   it('should call delete and navigate to sessions', () => {
-    jest.spyOn(TestBed.inject(SessionApiService), 'delete').mockReturnValue(of({}));
+    //Given
+    jest.spyOn(TestBed.inject(SessionApiService), 'delete').mockReturnValue(of(new HttpResponse<any>()));
     jest.spyOn(TestBed.inject(MatSnackBar), 'open');
 
+    //When
     component.delete();
 
+    //Then
     expect(TestBed.inject(SessionApiService).delete).toHaveBeenCalledWith(component.sessionId);
     expect(TestBed.inject(MatSnackBar).open).toHaveBeenCalledWith('Session deleted !', 'Close', { duration: 3000 });
 
@@ -134,8 +140,8 @@ describe('DetailComponent', () => {
     };
   
     jest.spyOn(TestBed.inject(SessionApiService), 'detail').mockReturnValue(of(mockSession));
-  // @ts-ignore
-    component.fetchSession();
+
+    (component as any).fetchSession();
   
     expect(TestBed.inject(SessionApiService).detail).toHaveBeenCalledWith(component.sessionId);
   

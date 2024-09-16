@@ -67,12 +67,12 @@ describe('MeComponent', () => {
   it('should delete user account', () => {
     //Given
     jest.spyOn(TestBed.inject(UserService), 'delete').mockReturnValue(of(null));
-
+    const snackBarSpy = jest.spyOn(TestBed.inject(MatSnackBar), 'open')
     //When
     component.delete();
     
     //Then
     expect(TestBed.inject(UserService).delete).toHaveBeenCalledWith(component['sessionService'].sessionInformation!.id.toString());
-    expect(TestBed.inject(MatSnackBar).open).toHaveBeenCalledWith("Your account has been deleted !", 'Close', { duration: 3000 });
+    expect(snackBarSpy).toHaveBeenCalledWith("Your account has been deleted !", 'Close', { duration: 3000 });
   });
 });

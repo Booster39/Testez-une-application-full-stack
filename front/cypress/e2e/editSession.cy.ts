@@ -97,7 +97,6 @@ describe('Edit session spec', () => {
       cy.contains('Create').click()
       cy.url().should('eq', 'http://localhost:4200/sessions/create')
 
-      // Leave out required fields to trigger validation error
       cy.get('input[formControlName=name]').type("Session 1")
       cy.get('input[formControlName=date]').type("2023-12-12")
       cy.get('mat-select[ng-reflect-name=teacher_id]').type("1")

@@ -67,7 +67,6 @@ describe('MeComponent', () => {
   it('should delete user account', () => {
     //Given
     jest.spyOn(TestBed.inject(UserService), 'delete').mockReturnValue(of(null));
-    jest.spyOn(TestBed.inject(MatSnackBar), 'open');
 
     //When
     component.delete();

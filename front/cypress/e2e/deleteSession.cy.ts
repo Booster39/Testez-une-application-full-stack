@@ -81,7 +81,6 @@ describe('Delete session spec', () => {
               updatedAt: "2024-06-20T12:44:37.0934961"
           }]).as('GetSession')
       cy.contains('Save').click()
-      //cy.url().should('eq', 'http://localhost:4200/sessions')
       
       cy.intercept(
       {
